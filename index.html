@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="author" content="Jacopo Naidi">
+<link rel="icon" href="data:,">
+<title>Export dei territori italiani: filiere, mercati e accesso</title>
+<style>
+:root {
+  --font-anthropic-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-anthropic-serif: Georgia, "Times New Roman", serif;
+  --color-fg: #1f1e1c; --color-fg-muted: #6b6862; --color-bg: #ffffff; --color-panel: #f6f4f0; --color-border-line: #e2ded6;
+  --color-ok: #2e6b3a; --color-bad: #a8322a;
+  --cds-gap-xs: 6px; --cds-gap-sm: 10px; --cds-gap-md: 14px; --cds-gap-lg: 22px;
+  --cds-pad-md: 12px; --cds-pad-lg: 18px; --cds-radius: 8px;
+  --cds-font-size-title: 28px; --cds-font-size-heading: 18px; --cds-font-size-body: 15px; --cds-font-size-caption: 13px;
+  --cds-font-weight-medium: 600;
+  --cds-text-secondary: #6b6862; --cds-surface-popover: #ffffff; --cds-border: #d6d1c7; --cds-shadow-popover: 0 4px 16px rgba(0,0,0,.12);
+  --cds-chart-axis: #c9c4ba; --cds-chart-muted: #dcd7cd; --cds-chart-reference: #9a958c;
+}
+html, body { margin: 0; background: var(--color-bg); }
+body { padding: 24px 28px 48px; max-width: 1280px; margin: 0 auto; font-size: var(--cds-font-size-body); }
+.dash-select { font: inherit; font-size: var(--cds-font-size-caption); color: var(--color-fg); background: var(--color-bg); border: 1px solid var(--cds-border); border-radius: 6px; padding: 5px 8px; max-width: 100%; }
+.lx a { color: inherit; }
+.lx { font-family: var(--font-anthropic-sans); color: var(--color-fg); display: flex; flex-direction: column; gap: var(--cds-gap-lg); }
+.lx h1 { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); margin: 0; }
+.lx h2 { font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); margin: 0 0 var(--cds-gap-xs) 0; }
+.lx h3 { font-size: var(--cds-font-size-body); font-weight: var(--cds-font-weight-medium); margin: 0; }
+.lx p { margin: 0; line-height: 1.5; }
+.lx-sub, .lx-note { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+.lx-take { max-width: 62em; }
+.lx-tabs { display: flex; flex-wrap: wrap; gap: var(--cds-gap-xs); border-bottom: 1px solid var(--color-border-line); }
+.lx-tab { font: inherit; font-size: var(--cds-font-size-caption); background: none; border: 0; border-bottom: 2px solid transparent; padding: 8px 10px; color: var(--color-fg-muted); cursor: pointer; }
+.lx-tab[aria-selected="true"] { color: var(--color-fg); border-bottom-color: var(--color-fg); font-weight: var(--cds-font-weight-medium); }
+.lx-sec { display: flex; flex-direction: column; gap: var(--cds-gap-lg); }
+.lx-sec[hidden] { display: none; }
+.lx-card { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-lg); display: flex; flex-direction: column; gap: var(--cds-gap-sm); }
+.lx-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--cds-gap-md); }
+.lx-kpi { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-md); display: flex; flex-direction: column; gap: 4px; }
+.lx-kpi .lab { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+.lx-kpi .big { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); font-variant-numeric: tabular-nums; }
+.lx-kpi .sm { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.lx-wrap { overflow-x: auto; }
+.lx table { border-collapse: collapse; width: 100%; font-size: var(--cds-font-size-caption); font-variant-numeric: tabular-nums; }
+.lx th, .lx td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--color-border-line); vertical-align: top; }
+.lx th { color: var(--color-fg-muted); font-weight: var(--cds-font-weight-medium); }
+.lx th[hidden] { display: none; }
+.lx td.n, .lx th.n { text-align: right; white-space: nowrap; }
+.lx th.n { white-space: normal; }
+.lx .good { color: var(--color-ok); }
+.lx .bad { color: var(--color-bad); }
+.lx .row-strong td { font-weight: var(--cds-font-weight-medium); }
+.lx .row-muted td { color: var(--color-fg-muted); }
+.lx-controls { display: flex; flex-wrap: wrap; gap: var(--cds-gap-md); align-items: center; }
+.lx label { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); display: inline-flex; gap: 6px; align-items: center; }
+.lx-chart { position: relative; min-height: 360px; }
+.lx-chart.small { min-height: 240px; }
+.lx-chart svg text { font-size: 11px; fill: var(--cds-text-secondary); }
+.lx-chart .lab2 { fill: var(--color-fg); font-size: 11px; }
+.lx-tip { position: absolute; pointer-events: none; background: var(--cds-surface-popover); border: 1px solid var(--cds-border); box-shadow: var(--cds-shadow-popover); border-radius: var(--cds-radius); padding: 6px 8px; font-size: var(--cds-font-size-caption); max-width: 280px; z-index: 2; }
+.lx details summary { cursor: pointer; font-weight: var(--cds-font-weight-medium); }
+.lx details ul { margin: var(--cds-gap-sm) 0 0 0; padding-left: 1.2em; line-height: 1.5; }
+.lx-grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--cds-gap-md); }
+.lx-txt h3 { margin-bottom: 4px; }
+.lx-txt p { font-size: var(--cds-font-size-caption); }
+.lx ul.lx-terr { margin: 0; padding-left: 1.2em; list-style: disc; font-size: var(--cds-font-size-caption); line-height: 1.5; }
+.lx ul.lx-elenco { margin: 0; padding-left: 1.2em; list-style: disc; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); line-height: 1.5; }
+.lx [data-draw="simili-paesi"] { position: relative; }
+.lx #dr-simili { position: relative; }
+.lx #dr-simili th { white-space: normal; vertical-align: bottom; }
+.lx .lx-sim { display: flex; flex-direction: column; gap: var(--cds-gap-xs); }
+.lx-liste { display: flex; flex-direction: column; gap: var(--cds-gap-lg); }
+.lx-lista { min-width: 0; display: flex; flex-direction: column; gap: var(--cds-gap-xs); }
+.lx .lx-lista-c table { width: 100%; table-layout: fixed; }
+.lx .lx-lista-c th:first-child { width: 28%; }
+.lx-dist { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: var(--cds-gap-md); }
+.lx-dc { border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-md); display: flex; flex-direction: column; gap: 6px; background: var(--color-bg); }
+.lx-dc .hd { display: flex; gap: 10px; align-items: flex-start; }
+.lx-dc .ic { flex: 0 0 34px; height: 34px; border-radius: 17px; background: var(--color-panel); border: 1px solid var(--color-border-line); display: flex; align-items: center; justify-content: center; }
+.lx-dc .ic svg { width: 20px; height: 20px; fill: none; stroke: var(--color-fg); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.lx-dc .nm { font-weight: var(--cds-font-weight-medium); line-height: 1.3; }
+.lx-dc .fl { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.lx-dc .tag { display: inline-block; font-size: 10px; padding: 1px 6px; border-radius: 8px; border: 1px solid var(--color-border-line); color: var(--color-fg-muted); margin-left: 4px; vertical-align: 1px; }
+.lx-dc .nums { display: flex; gap: 12px; align-items: baseline; }
+.lx-dc .ex { font-family: var(--font-anthropic-serif); font-size: 22px; font-variant-numeric: tabular-nums; }
+.lx-dc .vr { font-weight: var(--cds-font-weight-medium); font-variant-numeric: tabular-nums; }
+.lx-dc .nt { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); line-height: 1.4; }
+.lx-mx { position: relative; }
+.lx .lx-mx table { width: 100%; table-layout: fixed; min-width: 760px; }
+.lx .lx-mx th:first-child { width: 18%; }
+.lx .lx-mx td.c { text-align: center; height: 34px; border: 2px solid var(--color-panel); font-variant-numeric: tabular-nums; font-size: var(--cds-font-size-body); }
+.lx .lx-mx th.p { text-align: center; white-space: normal; vertical-align: bottom; hyphens: auto; -webkit-hyphens: auto; }
+.lx .lx-mx th.sopra { color: var(--color-fg); }
+.lx .lx-mx .fr { display: inline-block; margin-left: 4px; font-size: 9px; line-height: 14px; width: 14px; height: 14px; border-radius: 7px; background: var(--color-panel); vertical-align: 1px; }
+.lx .lx-mx .fr.su { color: var(--color-ok); }
+.lx .lx-mx .fr.giu { color: var(--color-bad); }
+.lx .lx-mx .fr.piatto { color: var(--color-fg-muted); font-size: 7px; }
+.lx .lx-mx td.c.perde { outline: 3px dashed var(--color-fg); outline-offset: -4px; }
+.lx .lx-mx td.c.peggio { outline: 3px dashed var(--color-bad); outline-offset: -4px; }
+.lx #filiera-mercato table { table-layout: fixed; min-width: 900px; }
+.lx #filiera-mercato th { white-space: normal; vertical-align: bottom; }
+.lx #filiera-mercato th:nth-child(1) { width: 11%; }
+.lx #filiera-mercato th.n { width: 8.5%; }
+.lx #filiera-mercato th:last-child { width: 38%; }
+.lx #filiera-mercato td:last-child { line-height: 1.4; }
+.lx .lx-mx tr.tot td { font-weight: var(--cds-font-weight-medium); border-top: 1px solid var(--color-fg-muted); text-align: center; }
+.lx #sez-ma th { white-space: normal; vertical-align: bottom; }
+.lx #sez-ma td { line-height: 1.4; }
+.lx #sez-ma td.lx-ma-off { display: none; }
+.lx #sez-ma th.w-nota { width: 32%; }
+.lx #sez-ma .lx-ma-req th:nth-child(1) { width: 12%; } .lx #sez-ma .lx-ma-req th:nth-child(2) { width: 14%; } .lx #sez-ma .lx-ma-req th:nth-child(3) { width: 50%; }
+.lx #sez-ma .lx-ma-tax th:nth-child(1) { width: 34%; } .lx #sez-ma .lx-ma-tax th:nth-child(2) { width: 24%; }
+.lx #sez-ma .lx-ma-acc, .lx #sez-ma .lx-ma-tr, .lx #sez-ma .lx-ma-sped { min-width: 760px; }
+.lx #ma-perimetro p.lx-note:empty { display: none; }
+.lx #sez-fonti table { table-layout: fixed; }
+.lx #sez-fonti th { white-space: normal; vertical-align: bottom; }
+.lx #sez-fonti td { line-height: 1.4; }
+.lx .lx-fonti-tab { min-width: 760px; }
+.lx .lx-fonti-tab th:nth-child(1) { width: 18%; } .lx .lx-fonti-tab th:nth-child(2) { width: 22%; } .lx .lx-fonti-tab th:nth-child(3) { width: 18%; } .lx .lx-fonti-tab th:nth-child(4) { width: 22%; } .lx .lx-fonti-tab th:nth-child(5) { width: 20%; }
+.lx .lx-fonti-reg th:nth-child(1) { width: 20%; }
+.lx #sez-fonti ol, .lx #sez-fonti ul { margin: 0; padding-left: 1.2em; line-height: 1.5; }
+.lx #sez-fonti ul { list-style: disc; }
+.lx #sez-fonti ol.lx-passi, .lx #sez-fonti ul.lx-livelli { list-style: none; padding-left: 0; display: grid; gap: var(--cds-gap-md); }
+.lx #sez-fonti ol.lx-passi { grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); }
+.lx #sez-fonti .lx-passi li, .lx #sez-fonti .lx-livelli li { display: flex; gap: 10px; align-items: flex-start; }
+.lx #sez-fonti .lx-passi li { flex-direction: column; gap: 8px; border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-md); background: var(--color-bg); }
+.lx #sez-fonti .lx-ic { flex: 0 0 auto; width: 34px; height: 34px; border-radius: 17px; background: var(--color-panel); border: 1px solid var(--color-border-line); display: flex; align-items: center; justify-content: center; }
+.lx #sez-fonti .lx-ic svg { width: 20px; height: 20px; fill: none; stroke: var(--color-fg); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.lx #sez-fonti .lx-num { color: var(--color-fg-muted); font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body>
+<div class="lx" lang="it">
+  <header id="titolo">
+    <h1>Export dei territori italiani: filiere, mercati e accesso</h1>
+    <p class="lx-sub">A cura di Jacopo Naidi. Dati aggiornati al 24 novembre 2026, da fonti pubbliche, ricalcolati e verificati: l'elenco è in fondo alla pagina, in "Come sono fatti i numeri e limiti". Date e prossimi aggiornamenti delle fonti sono nella scheda "Fonti e aggiornamenti".</p>
+  </header>
+
+  <p class="lx-take" id="come-funziona">La pagina divide l'Italia in 12 territori, ognuno fatto da un gruppo di province. Per ogni territorio mostra cosa esportano le imprese e verso quali Paesi. Mostra poi dove vendono meno del resto d'Italia negli stessi settori, che qui chiamiamo filiere. Questa differenza è l'export mancante: uno spazio da capire con le imprese, non una previsione di vendita. Accanto c'è la domanda del Paese: quanto importa da tutto il mondo, se cresce e quanto pesa l'Italia. Uno spazio grande, in un mercato grande e in crescita, è un tema da approfondire.</p>
+
+  <nav class="lx-tabs" role="tablist" id="schede">
+    <button class="lx-tab" role="tab" data-tab="sez-dr" aria-selected="true">Territorio</button>
+    <button class="lx-tab" role="tab" data-tab="sez-paesi" aria-selected="false">Paesi e domanda</button>
+    <button class="lx-tab" role="tab" data-tab="sez-filiere" aria-selected="false">Filiere</button>
+    <button class="lx-tab" role="tab" data-tab="sez-ma" aria-selected="false">Mercato e accesso</button>
+    <button class="lx-tab" role="tab" data-tab="sez-fonti" aria-selected="false">Fonti e aggiornamenti</button>
+  </nav>
+
+  <section class="lx-sec" id="sez-dr">
+    <div class="lx-controls">
+      <label>Territorio
+        <select class="dash-select" id="sel-dr" aria-label="Territorio">
+          <option value="1">Piemonte Nord, Valle d'Aosta e Sardegna</option>
+          <option value="2">Piemonte Sud e Liguria</option>
+          <option value="3">Milano, Monza e Brianza</option>
+          <option value="4">Lombardia Nord</option>
+          <option value="5">Lombardia Sud</option>
+          <option value="6">Veneto Ovest e Trentino Alto Adige</option>
+          <option value="7">Veneto Est e Friuli Venezia Giulia</option>
+          <option value="8">Emilia Romagna e Marche</option>
+          <option value="9">Toscana e Umbria</option>
+          <option value="10">Lazio e Abruzzo</option>
+          <option value="11">Basilicata, Puglia e Molise</option>
+          <option value="12">Campania, Calabria e Sicilia</option>
+        </select>
+      </label>
+    </div>
+
+    <h2 id="dr-nome"><span data-draw="drv" data-source="dr_scheda" data-field="nome_esteso" data-fmt="text">-</span></h2>
+    <p class="lx-take" id="dr-sintesi"><span data-draw="drv" data-source="dr_scheda" data-field="sintesi" data-fmt="text">-</span></p>
+
+    <div class="lx-kpis" id="dr-numeri">
+      <div class="lx-kpi"><span class="lab">Export 2025</span><span class="big"><span data-draw="drv" data-source="dr_scheda" data-field="export_2025_mld" data-fmt="mld">-</span> mld</span><span class="sm">2025: <span data-draw="drv" data-source="dr_scheda" data-field="var_2025_pct" data-fmt="pctd">-</span>; 1° sem. 2026: <span data-draw="drv" data-source="dr_scheda" data-field="var_h1_2026_pct" data-fmt="pctd">-</span></span></div>
+      <div class="lx-kpi"><span class="lab">Export "core PMI" 2025</span><span class="big"><span data-draw="drv" data-source="dr_scheda" data-field="core_pmi_mld" data-fmt="mld">-</span> mld</span><span class="sm"><span data-draw="drv" data-source="dr_scheda" data-field="passaggio_core" data-fmt="text">-</span></span><span class="sm">Concentrazione per Paese (HHI): <span data-draw="drv" data-source="dr_scheda" data-field="hhi" data-fmt="int">-</span></span></div>
+      <div class="lx-kpi"><span class="lab">Soglia per entrare in lista</span><span class="big"><span data-draw="drv" data-source="dr_scheda" data-field="soglia_mln" data-fmt="int">-</span> mln</span><span class="sm">Un Paese entra in lista se il territorio potrebbe venderci almeno questa cifra in più all'anno, rispetto a come vende il resto d'Italia.</span><span class="sm">È lo 0,5% del perimetro del territorio, <span data-draw="drv" data-source="dr_scheda" data-field="perimetro_cap16_mln" data-fmt="int">-</span> mln. Il perimetro è l'export medio annuo 2023-2025 nelle filiere da almeno 20 milioni. Restano fuori prodotti petroliferi raffinati, farmaci, auto finite, mezzi di trasporto, oro e gioielli.</span></div>
+      <div class="lx-kpi"><span class="lab">Paesi sopra soglia</span><span class="big"><span data-draw="drv" data-source="dr_scheda" data-field="n_approfondire" data-fmt="int">-</span> da approfondire + <span data-draw="drv" data-source="dr_scheda" data-field="n_aprire" data-fmt="int">-</span> da aprire</span><span class="sm">Da approfondire: già tra i primi 10 mercati del territorio, ma con spazio per vendere di più. Da aprire: fuori dai primi 10. I Paesi da consolidare (i primi 10 mercati) non hanno soglia e non sono contati qui.</span><span class="sm">Export mancante: quanto il territorio venderebbe in più nel Paese se, filiera per filiera, ci mandasse la stessa quota del resto d'Italia. Il calcolo dà più peso ai settori dove esportano soprattutto le PMI, le imprese sotto i 250 addetti.</span></div>
+    </div>
+    <p class="lx-note" id="dr-numeri-nota">Export "core PMI": export totale del territorio nel 2025 senza prodotti petroliferi raffinati, farmaci, navi e oro. Sono flussi di pochi grandi operatori: spostano i totali ma dicono poco sulle PMI. Fonte: Istat Coeweb, la banca dati Istat sul commercio estero, somma delle province. HHI (indice di concentrazione): quanto l'export core PMI 2025 dipende da pochi Paesi. Va da 0 (molto diversificato) a 10.000 (un solo Paese); sotto 1.000 l'export è diversificato. Variazioni: 2025 sul 2024 e 1° semestre 2026 sul 1° semestre 2025. Valori in miliardi, arrotondati.</p>
+
+    <section class="lx-card lx-txt" id="dr-terr-rischi">
+      <h2>Regioni, province e rischi</h2>
+      <div class="lx-grid2">
+        <div><h3>Regioni e province</h3><ul class="lx-terr" data-draw="dr-terr" data-source="dr_scheda" data-field="numeri_territorio"></ul></div>
+        <div><h3>Rischi</h3><p data-draw="drv" data-source="dr_scheda" data-field="rischi" data-fmt="text">-</p></div>
+      </div>
+      <p class="lx-note">Regioni e province: export totale, con tutti i prodotti, compresi oro, farmaci e raffinati. Fonti: pubblicazioni Istat sull'export delle regioni (4° trimestre 2025 e 2° trimestre 2026) e Camere di commercio. Non vanno sommati ai riquadri dei numeri qui sopra. Le note sulla regione sono in fondo all'elenco. Rischi: letture tratte dalle stesse fonti, dai Monitor dei distretti Intesa Sanpaolo e dalle fonti sui dazi degli Stati Uniti. Sono temi da verificare con le imprese.</p>
+    </section>
+
+    <section class="lx-card" id="dr-territorio">
+      <h2>Il territorio: distretti e poli tecnologici</h2>
+      <p class="lx-note">Le specializzazioni del territorio, da leggere prima dell'analisi. Per ogni distretto o polo tecnologico: export dell'ultimo periodo nei Monitor dei distretti Intesa Sanpaolo e variazione sullo stesso periodo dell'anno prima. Il periodo cambia da regione a regione: 1° trimestre o 1° semestre 2026, indicato nella fonte. L'icona indica la filiera, per leggere i distretti insieme alla matrice più sotto. I valori non si sommano all'export del territorio: coprono solo distretti e poli monitorati.</p>
+      <div class="lx-controls"><label><input type="checkbox" id="chk-dist-tutti"> Mostra tutti i distretti e poli (di base i primi 8 per export)</label></div>
+      <div class="lx-dist" data-draw="territorio" data-source="distretti"></div>
+      <p class="lx-note">Fonte: <span data-draw="dist-fonte" data-source="distretti" data-field="fonte">-</span></p>
+    </section>
+
+    <section class="lx-card" id="dr-liste">
+      <h2>Le tre liste</h2>
+      <p class="lx-note">Colonne delle liste Approfondire e Aprire. Mercato: quanto il Paese importa ogni anno da tutto il mondo, media 2023-2025, nelle filiere dove il territorio ha almeno 1 milione di spazio. Domanda: crescita dell'import del Paese dal 2023 al 2025 in quelle filiere. Quota Italia: parte dell'import del Paese che arriva dall'Italia, media 2023-2025. Domanda e quota sono medie delle filiere, con più peso dove l'export mancante del territorio è più grande. Per ogni filiera la quota è l'import medio dall'Italia diviso l'import medio totale. Variazione della quota: in punti percentuali dal 2023 al 2025 (per esempio -0,4 = da 11,4% a 11,0%). Filiere: le due con più export mancante, non le sole.</p>
+      <div class="lx-liste">
+        <div class="lx-lista lx-lista-c" id="lista-consolidare">
+          <h3>1. Consolidare</h3>
+          <p class="lx-note">I primi 10 mercati del territorio per export medio 2023-2025: i Paesi dove le imprese vendono già, da presidiare. Peso: quota del Paese sull'export del territorio, nel perimetro. Var. 2023-25 del territorio: come è cambiato l'export del territorio verso il Paese tra il 2023 e il 2025. Domanda del Paese: come è cambiato l'import del Paese da tutto il mondo negli stessi anni. Conta le filiere che il territorio vende lì, con più peso a quelle dove il territorio esporta di più. Se il territorio va peggio della domanda, perde terreno; se va meglio, ne guadagna. La domanda è vuota dove i dati ONU o Eurostat mancano o coprono meno di metà dell'export del territorio verso il Paese.</p>
+          <div class="lx-wrap">
+            <table>
+              <thead><tr>
+                <th>Paese</th>
+                <th class="n">Export medio (mld/anno, media 2023-25)</th>
+                <th class="n">Peso sul territorio (%, media 2023-25)</th>
+                <th class="n">Var. 2023-25 del territorio</th>
+                <th class="n">Domanda del Paese 2023-25</th>
+              </tr></thead>
+              <tbody data-draw="tab-liste"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="lx-lista" id="lista-approfondire">
+          <h3>2. Approfondire</h3>
+          <p class="lx-note">Paesi già tra i primi 10, dove il territorio vende meno del resto d'Italia nelle stesse filiere. L'export mancante supera la soglia.</p>
+          <div class="lx-wrap">
+            <table>
+              <thead><tr>
+                <th>Paese</th>
+                <th class="n">Export mancante (mln/anno, media 2023-25)</th>
+                <th>Prime due filiere per spazio</th>
+                <th class="n">Mercato del Paese (mld/anno, media 2023-25)</th>
+                <th class="n">Domanda, var. 2023-25</th>
+                <th class="n">Quota Italia (%, media 2023-25)</th>
+                <th class="n">Quota Italia, var. 2023-25 (punti)</th>
+              </tr></thead>
+              <tbody data-draw="tab-liste-a"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="lx-lista" id="lista-aprire">
+          <h3>3. Aprire</h3>
+          <p class="lx-note">Paesi fuori dai primi 10, dove il territorio vende meno del resto d'Italia. L'export mancante supera la soglia. Emirati Arabi Uniti: nessun dato ONU dopo il 2023, la domanda è la crescita 2023-25 dell'export del resto d'Italia verso gli Emirati Arabi Uniti nelle stesse filiere.</p>
+          <div class="lx-wrap">
+            <table>
+              <thead><tr>
+                <th>Paese</th>
+                <th class="n">Export mancante (mln/anno, media 2023-25)</th>
+                <th>Prime due filiere per spazio</th>
+                <th class="n">Mercato del Paese (mld/anno, media 2023-25)</th>
+                <th class="n">Domanda, var. 2023-25</th>
+                <th class="n">Quota Italia (%, media 2023-25)</th>
+                <th class="n">Quota Italia, var. 2023-25 (punti)</th>
+              </tr></thead>
+              <tbody data-draw="tab-liste-o"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="lx-card" id="dr-vuoto">
+      <h2>Come nasce lo spazio: il vuoto rispetto al resto d'Italia</h2>
+      <div class="lx-controls">
+        <label>Paese <select class="dash-select" data-draw="sel-vuoto" aria-label="Paese per il confronto"></select></label>
+      </div>
+      <p class="lx-note">Un Paese alla volta, media 2023-2025. Per ogni filiera, il pallino pieno è la parte dell'export del territorio che va nel Paese. Il pallino vuoto è lo stesso per il resto d'Italia. La distanza tra i due, per l'export del territorio nella filiera e per il peso delle PMI, dà l'export mancante. È il numero a destra, in milioni l'anno, lo stesso delle caselle della matrice qui sotto. Si vedono le prime 12 filiere per export mancante. Il totale per filiera su tutti i Paesi è nella tabella "Le filiere del territorio", più in basso.</p>
+      <div class="lx-chart small" data-draw="vuoto" data-source="opportunita"></div>
+    </section>
+
+    <section class="lx-card" id="dr-matrice">
+      <h2>Dove c'è spazio: filiere per Paesi</h2>
+      <p class="lx-note">In ogni casella l'export mancante del territorio, in milioni l'anno: quanto venderebbe in più in quel Paese e in quella filiera con la stessa quota del resto d'Italia. Più scura la casella, più spazio. Si vedono le prime 12 filiere e i primi 10 Paesi per export mancante. Paesi in grassetto: sopra la soglia del territorio.</p>
+      <p class="lx-note">Accanto al numero, il mercato del Paese nella filiera dal 2023 al 2025: ▲ verde cresce (oltre +2%), ▼ rossa cala (oltre -2%), ● grigio stabile. Nessun segno se manca il dato ONU o Eurostat. Tratteggio nero: in quel mercato l'Italia perde quota sui concorrenti, oltre 0,2 punti dal 2023 al 2025.</p>
+      <p class="lx-note">Tratteggio rosso: dal 2023 al 2025 l'export del territorio in quella filiera e Paese è andato peggio del resto d'Italia, di oltre 5 punti. Il territorio perde terreno anche rispetto alle altre imprese italiane. Se l'export del territorio è cambiato di oltre il 50%, in più o in meno, il tratteggio rosso non c'è: il dato va verificato.</p>
+      <p class="lx-note">L'ultima riga somma tutte le filiere, anche quelle non mostrate e gli spazi sotto 1 milione. Per i Paesi in grassetto è il numero delle liste. Con il filtro sui mercati in crescita restano solo le caselle con ▲: filiere e Paesi si riordinano e il totale conta solo quelle. Passando sopra una casella si vede la domanda del Paese. Si vede anche come va l'export del territorio rispetto al resto d'Italia dal 2023 al 2025 (fonte Istat). Il confronto c'è solo dove il territorio esporta almeno 10 milioni in entrambi gli anni. Meglio o peggio vuol dire uno scarto di oltre 5 punti.</p>
+      <div class="lx-controls"><label><input type="checkbox" id="chk-crescita"> Solo mercati in crescita (import del Paese oltre +2% tra il 2023 e il 2025)</label></div>
+      <div class="lx-wrap" data-draw="matrice" data-source="opportunita mancante_paese"></div>
+    </section>
+
+    <section class="lx-card" id="dr-opportunita">
+      <h2>Tutte le opportunità del territorio</h2>
+      <div class="lx-controls">
+        <label>Paese <select class="dash-select" data-draw="sel-opp-paese" aria-label="Paese"></select></label>
+        <label>Filiera <select class="dash-select" data-draw="sel-opp-fil" aria-label="Filiera"></select></label>
+        <label><input type="checkbox" id="chk-soglia"> Solo Paesi sopra soglia</label>
+      </div>
+      <p class="lx-note">Le prime 60 coppie filiera-Paese, ordinate per export mancante. Quota nel territorio: parte dell'export del territorio nella filiera che va nel Paese (non il peso della filiera sul territorio). Quota resto d'Italia: lo stesso per gli altri territori. Vuoto: differenza tra le due quote, in punti. Quota Italia: peso dell'Italia sull'import del Paese nella filiera. Export del territorio e del resto d'Italia, var.: come è cambiato il loro export verso il Paese nella filiera (fonte Istat). Le righe escluse dal calcolo dicono perché, con un solo motivo. Se i motivi sono più di uno, vale quest'ordine:</p>
+      <ul class="lx-elenco">
+        <li>filiera concentrata: oltre metà dell'export del territorio nella filiera va in un solo Paese;</li>
+        <li>metallurgia verso un Paese dell'oro: Svizzera, Emirati Arabi Uniti, Hong Kong e Turchia;</li>
+        <li>media trainata da un territorio: un solo altro territorio fa più di metà del resto d'Italia;</li>
+        <li>rischio imprese SACE sopra 70: indice della Mappa dell'Export SACE 2026.</li>
+      </ul>
+      <p class="lx-note">"Flusso del territorio sotto 10 mln" e "variazione del territorio molto forte" (oltre il 50%) dicono che il confronto con il resto d'Italia non si legge. Non sono elencate le coppie con meno di 1 milione di export mancante e meno di 5 milioni di export del territorio. Sono comunque nei totali delle liste e della matrice.</p>
+      <div class="lx-wrap">
+        <table>
+          <thead><tr>
+            <th>Filiera</th>
+            <th>Paese</th>
+            <th class="n">Export del territorio (mln/anno, media 2023-25)</th>
+            <th class="n">Quota nel territorio (%, media 2023-25)</th>
+            <th class="n">Quota resto d'Italia (%, media 2023-25)</th>
+            <th class="n">Vuoto (punti)</th>
+            <th class="n">Export mancante (mln/anno, media 2023-25)</th>
+            <th class="n">Import del Paese (mln/anno, media 2023-25)</th>
+            <th class="n">Import del Paese, var. 2023-25 (%)</th>
+            <th class="n">Quota Italia (%, media 2023-25)</th>
+            <th class="n">Quota Italia, var. 2023-25 (punti)</th>
+            <th class="n">Export del territorio, var. 2023-25 (%)</th>
+            <th class="n">Export resto d'Italia, var. 2023-25 (%)</th>
+            <th class="n">Export del territorio 1° sem. 2026 (mln)</th>
+            <th>Note</th>
+          </tr></thead>
+          <tbody data-draw="tab-opp"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="lx-card" id="dr-filiere">
+      <h2>Le filiere del territorio</h2>
+      <p class="lx-note">La vista d'insieme: l'export mancante di ogni filiera sommato su tutti i Paesi. Filiere da almeno 20 milioni l'anno, senza prodotti petroliferi raffinati, farmaci, auto finite, mezzi di trasporto, oro e gioielli. Quota PMI: parte dell'export del settore, in Italia, fatta dalle imprese sotto i 250 addetti. Con una quota del 49% il peso è 1; sopra pesa di più, sotto di meno.</p>
+      <div class="lx-wrap">
+        <table>
+          <thead><tr>
+            <th>Filiera</th>
+            <th class="n">Export medio 2023-25 (mln)</th>
+            <th class="n">Var. 2023-25 (%)</th>
+            <th class="n">Peso sul territorio (%, media 2023-25)</th>
+            <th class="n">Quota PMI settore (%, 2024)</th>
+            <th class="n">Export mancante, tutti i Paesi (mln/anno, media 2023-25)</th>
+            <th class="n">di cui nei Paesi sopra soglia (mln/anno)</th>
+            <th>Concentrata su</th>
+            <th>Confronto</th>
+          </tr></thead>
+          <tbody data-draw="tab-fil"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="lx-card" id="dr-simili">
+      <h2>Territori con filiere simili</h2>
+      <p class="lx-note">I due territori che esportano le filiere più simili a questo. Indice di somiglianza: quanta parte dell'export i due territori hanno nelle stesse filiere, da 0 (nessuna filiera in comune) a 100 (stesso peso in ogni filiera). Pesi sul perimetro del territorio, media 2023-2025.</p>
+      <p class="lx-note"><b>Da leggere insieme all'export mancante, non al suo posto.</b> Qui il confronto è con un solo territorio. L'export mancante, nelle liste e nella matrice, confronta il territorio con il resto d'Italia: i due numeri possono essere diversi.</p>
+      <div class="lx-wrap">
+        <table>
+          <thead><tr>
+            <th>Territorio simile</th>
+            <th class="n">Indice di somiglianza (0-100, media 2023-25)</th>
+            <th class="n">Filiere in comune (perimetro, media 2023-25)</th>
+            <th class="n">Casi filiera-Paese a confronto (media 2023-25)</th>
+          </tr></thead>
+          <tbody data-draw="tab-simili"></tbody>
+        </table>
+      </div>
+      <p class="lx-note">Casi a confronto: nelle filiere in comune, i Paesi dove il territorio simile manda una parte più grande del suo export (media 2023-2025). Compaiono solo se il territorio simile esporta almeno 10 milioni l'anno nel Paese. La sua quota deve superare quella del territorio di almeno 3 punti. Quota: parte dell'export del territorio nella filiera che va nel Paese. Export in più: quanto il territorio venderebbe in più nel Paese con la quota del territorio simile. Si calcola come l'export mancante, peso PMI compreso. Esclusi, come nell'export mancante:</p>
+      <ul class="lx-elenco">
+        <li>Russia e Bielorussia;</li>
+        <li>Paesi con rischio imprese SACE sopra 70;</li>
+        <li>metallurgia verso i Paesi dell'oro;</li>
+        <li>filiere del territorio con oltre metà dell'export in un solo Paese, che però restano nell'indice e nelle filiere in comune.</li>
+      </ul>
+      <p class="lx-note">Moda (tessile, abbigliamento, pelle e calzature): a confronto solo se il territorio simile è tra Veneto Ovest e Trentino Alto Adige; Veneto Est e Friuli Venezia Giulia; Emilia Romagna e Marche; Basilicata, Puglia e Molise. In questi territori la moda è fatta soprattutto da PMI, come nell'export mancante. Con gli altri territori simili la moda conta nell'indice e nelle filiere in comune, ma non ha casi a confronto.</p>
+      <div class="lx-controls"><label><input type="checkbox" id="chk-simili-tutti"> Mostra tutti i casi a confronto (di base i primi 8 per ogni territorio simile, per export in più)</label></div>
+      <div data-draw="simili-paesi" data-source="dr_simili_paesi dr_simili dr_scheda"></div>
+    </section>
+
+    <section class="lx-card lx-txt" id="dr-testi">
+      <h2>Il quadro del territorio: mercati e temi</h2>
+      <div class="lx-grid2">
+        <div><h3>Mercati</h3><p data-draw="drv" data-source="dr_scheda" data-field="mercati" data-fmt="text">-</p></div>
+        <div><h3>Cosa dicono i dati più recenti</h3><p data-draw="drv" data-source="dr_scheda" data-field="dati_nuovi" data-fmt="text">-</p></div>
+        <div><h3>Interessi da valorizzare</h3><ul class="lx-terr" data-draw="dr-int" data-source="dr_scheda" data-field="interessi"></ul></div>
+      </div>
+    </section>
+  </section>
+
+  <section class="lx-sec" id="sez-paesi" hidden>
+    <div class="lx-controls">
+      <label>Paese <select class="dash-select" data-draw="sel-paese" aria-label="Paese"></select></label>
+    </div>
+    <p class="lx-note">La scheda copre 31 Paesi con dati sull'import. Per i 12 Paesi fuori UE la fonte è ONU Comtrade, banca dati delle Nazioni Unite, in dollari convertiti in euro con il cambio medio BCE. Per i 19 Paesi UE la fonte è Eurostat Comext, banca dati europea del commercio estero. Stessi numeri delle schede Filiere e Mercato e accesso.</p>
+    <div id="paese-contesto" data-draw="contesto" data-source="contesto_paesi"></div>
+    <section class="lx-card" id="paese-domanda">
+      <h2>Quanto importa il Paese, filiera per filiera</h2>
+      <p class="lx-note">Barra grigia: import medio annuo 2023-2025 del Paese da tutto il mondo, in milioni di euro; parte colorata: quanto arriva dall'Italia. Accanto alla barra, nell'ordine: import medio 2023-25 (mln), variazione dell'import dal 2023 al 2025, quota dell'Italia (media 2023-25).</p>
+      <div class="lx-chart" data-draw="barre-paese" data-source="domanda_paesi"></div>
+      <div class="lx-wrap">
+        <table>
+          <thead><tr>
+            <th>Filiera</th>
+            <th class="n">Import da tutto il mondo (mln/anno, media 2023-25)</th>
+            <th class="n">di cui dall'Italia (mln/anno, media 2023-25)</th>
+            <th class="n">Import, var. 2023-25 (%)</th>
+            <th class="n">Quota Italia (%, media 2023-25)</th>
+            <th class="n">Quota Italia, var. 2023-25 (punti)</th>
+          </tr></thead>
+          <tbody data-draw="tab-dom"></tbody>
+        </table>
+      </div>
+      <p class="lx-note">Fonte della domanda: <span data-draw="dom-fonte" data-source="domanda_paesi" data-field="fonte">-</span>. Componenti auto: solo parti e accessori (8708, 8511, 8512, 9401.20, 8544.30), senza le auto finite.</p>
+    </section>
+    <section class="lx-card" id="paese-12dr">
+      <h2>Il Paese nei 12 territori</h2>
+      <p class="lx-note">Per ogni territorio: quanto esporta nel Paese (media 2023-25, nel perimetro del territorio), quanto pesa il Paese sul suo export e che posto occupa tra i suoi mercati. Poi come è cambiato l'export dal 2023 al 2025, l'export mancante confrontato con la soglia del territorio e la lista del territorio in cui compare il Paese. In grassetto i territori in cui il Paese è sopra soglia.</p>
+      <div class="lx-wrap">
+        <table>
+          <thead><tr>
+            <th>Territorio</th>
+            <th class="n">Export del territorio (mln/anno, media 2023-25)</th>
+            <th class="n">Peso sull'export del territorio (%)</th>
+            <th class="n">Posizione tra i mercati del territorio</th>
+            <th class="n">Export del territorio, var. 2023-25 (%)</th>
+            <th class="n">Export mancante (mln/anno, media 2023-25)</th>
+            <th class="n">Soglia del territorio (mln)</th>
+            <th>Lista del territorio</th>
+          </tr></thead>
+          <tbody data-draw="tab-paese-12dr"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="lx-card" id="paese-dr">
+      <h2>Quali territori hanno spazio in questo Paese, filiera per filiera</h2>
+      <p class="lx-note">Righe con almeno 5 milioni di export mancante, ordinate per export mancante; le prime 50. In grassetto le righe in cui il Paese è sopra la soglia del territorio. Quota nel territorio: quanta parte dell'export del territorio in quella filiera va nel Paese; quota resto d'Italia: lo stesso per gli altri territori.</p>
+      <div class="lx-wrap">
+        <table>
+          <thead><tr>
+            <th>Territorio</th>
+            <th>Filiera</th>
+            <th class="n">Export del territorio (mln/anno, media 2023-25)</th>
+            <th class="n">Quota nel territorio (%, media 2023-25)</th>
+            <th class="n">Quota resto d'Italia (%, media 2023-25)</th>
+            <th class="n">Export mancante (mln/anno, media 2023-25)</th>
+            <th>Lista del territorio</th>
+          </tr></thead>
+          <tbody data-draw="tab-paese-dr"></tbody>
+        </table>
+      </div>
+    </section>
+  </section>
+
+  <section class="lx-sec" id="sez-filiere" hidden>
+    <div class="lx-controls">
+      <label>Filiera <select class="dash-select" data-draw="sel-filiera" aria-label="Filiera"></select></label>
+    </div>
+    <section class="lx-card" id="filiera-mercato">
+      <h2>Il mercato della filiera: chi importa, se cresce, quanto pesa l'Italia</h2>
+      <p class="lx-take" data-draw="fil-mercato-sintesi" data-source="mercati_filiera filiere_dr">-</p>
+      <p class="lx-note">Si parte dal mercato e poi si scende ai territori. Per ogni Paese: quanto importa ogni anno da tutto il mondo nella filiera (media 2023-25) e come è cambiato l'import dal 2023 al 2025. Poi quanto pesa l'Italia e come è cambiata la sua quota. Infine l'export dei 12 territori verso il Paese, l'export mancante sommato sui 12 territori e i territori con almeno 5 milioni di spazio. Solo i 31 Paesi con dati ONU o Eurostat: non è il mercato mondiale. Mancano, tra gli altri, Emirati Arabi Uniti, Hong Kong, Turchia, Israele e Australia. Le filiere sono costruite dai codici doganali, come nella scheda Mercato e accesso: import e quota Italia coincidono. I codici di ogni filiera sono nella scheda Mercato e accesso, riquadro "Il perimetro della filiera".</p>
+      <div class="lx-controls"><label><input type="checkbox" id="chk-fil-tutti"> Mostra tutti i 31 Paesi (di base i primi 15 per import)</label></div>
+      <div class="lx-wrap">
+        <table>
+          <thead><tr>
+            <th>Paese</th>
+            <th class="n">Import da tutto il mondo (mln/anno, media 2023-25)</th>
+            <th class="n">Import, var. 2023-25 (%)</th>
+            <th class="n">Quota Italia (%, media 2023-25)</th>
+            <th class="n">Quota Italia, var. 2023-25 (punti)</th>
+            <th class="n">Export 12 territori (mln/anno, media 2023-25)</th>
+            <th class="n">Export mancante 12 territori (mln/anno, media 2023-25)</th>
+            <th>Territori con almeno 5 mln di spazio</th>
+          </tr></thead>
+          <tbody data-draw="tab-fil-mercato"></tbody>
+        </table>
+      </div>
+      <p class="lx-note">Fonte dell'import: ONU Comtrade per i 12 Paesi fuori UE (dollari convertiti in euro con il cambio medio BCE), Eurostat Comext per i 19 Paesi UE. Anni 2023-2025, al netto delle reimportazioni. Export dei territori: Istat Coeweb (media 2023-25, estrazione del 18 novembre 2026; oro tolto con Istat SITC voce 97, estrazione del 20 novembre 2026).</p>
+    </section>
+    <section class="lx-card" id="filiera-dr">
+      <h2>La filiera nei 12 territori</h2>
+      <p class="lx-note">Export mancante: quanto il territorio venderebbe in più se, Paese per Paese, mandasse la stessa quota del resto d'Italia, pesato per la quota di PMI del settore. Resto d'Italia: gli altri 11 territori; per tessile, abbigliamento e pelle e calzature, Veneto Ovest e Trentino Alto Adige; Veneto Est e Friuli Venezia Giulia; Emilia Romagna e Marche; Basilicata, Puglia e Molise. Le quattro colonne a destra dividono questo spazio secondo il mercato del Paese tra il 2023 e il 2025. In crescita: import oltre +2%; stabile: tra -2% e +2%; in calo: oltre -2%. Senza dato: Paesi fuori dai 31 con dati ONU o Eurostat, Emirati Arabi Uniti compresi. Uno spazio grande in mercati in calo vale meno di uno spazio più piccolo in mercati che crescono.</p>
+      <div class="lx-wrap">
+        <table>
+          <thead><tr>
+            <th>Territorio</th>
+            <th class="n">Export medio 2023-25 (mln)</th>
+            <th class="n">Var. 2023-25 (%)</th>
+            <th class="n">Peso sul territorio (%, media 2023-25)</th>
+            <th class="n">Export mancante, tutti i Paesi (mln/anno, media 2023-25)</th>
+            <th class="n">di cui sopra soglia (mln/anno)</th>
+            <th class="n">di cui in mercati in crescita</th>
+            <th class="n">stabili</th>
+            <th class="n">in calo</th>
+            <th class="n">senza dato</th>
+            <th>Concentrata su</th>
+          </tr></thead>
+          <tbody data-draw="tab-fil-dr"></tbody>
+        </table>
+      </div>
+    </section>
+    <section class="lx-card" id="filiera-opp">
+      <h2>Dove sono i vuoti più grandi</h2>
+      <p class="lx-note">Territori e Paesi con almeno 5 milioni di export mancante nella filiera, con la domanda del Paese; i primi 50.</p>
+      <div class="lx-wrap">
+        <table>
+          <thead><tr>
+            <th>Territorio</th>
+            <th>Paese</th>
+            <th class="n">Export del territorio (mln/anno, media 2023-25)</th>
+            <th class="n">Vuoto (punti)</th>
+            <th class="n">Export mancante (mln/anno, media 2023-25)</th>
+            <th class="n">Import del Paese (mln/anno, media 2023-25)</th>
+            <th class="n">Import del Paese, var. 2023-25 (%)</th>
+            <th class="n">Quota Italia (%, media 2023-25)</th>
+            <th class="n">Quota Italia, var. 2023-25 (punti)</th>
+          </tr></thead>
+          <tbody data-draw="tab-fil-opp"></tbody>
+        </table>
+      </div>
+    </section>
+  </section>
+
+  <section class="lx-sec" id="sez-ma" hidden>
+    <div class="lx-controls">
+      <label>Filiera
+        <select class="dash-select" data-draw="ma-sel-fil" aria-label="Filiera per la scheda mercato e accesso"></select>
+      </label>
+      <label>Paese
+        <select class="dash-select" data-draw="ma-sel-paese" aria-label="Paese per la scheda mercato e accesso"></select>
+      </label>
+    </div>
+    <div id="ma-intro" data-draw="ma-testo" data-slot="intro" data-kind="take"></div>
+
+    <section class="lx-card" id="ma-note-coppia" hidden>
+      <h2>Note sulla coppia</h2>
+      <p class="lx-note"><span data-draw="ma-st-note"></span></p>
+    </section>
+
+    <section class="lx-card" id="ma-perimetro">
+      <h2>Il perimetro della filiera</h2>
+      <p>Codici doganali inclusi: <span data-draw="ma-cod" data-field="inclusi">-</span>. Esclusi: <span data-draw="ma-cod" data-field="esclusi">-</span>.</p>
+      <p class="lx-note" data-draw="ma-cod" data-field="nota">-</p>
+      <p>Copertura sull'export Istat della filiera verso i 31 Paesi: <b data-draw="ma-cod" data-field="copertura_2023_pct">-</b>% nel 2023, <b data-draw="ma-cod" data-field="copertura_2024_pct">-</b>% nel 2024. Famiglie di prodotti: <span data-draw="ma-cod" data-field="famiglie">-</span>.</p>
+      <p class="lx-note">Copertura: l'export italiano verso i 31 Paesi ricostruito con questi codici doganali, diviso per l'export Istat della filiera dei 12 territori. Vicina a 100% vuol dire che i codici descrivono bene la filiera. Fonte dei codici: BACI, banca dati del commercio mondiale del CEPII, centro di ricerca francese (gennaio 2026). BACI usa i valori alla partenza (FOB, cioè senza trasporto internazionale e assicurazione), in euro con il cambio medio BCE. Istat: Coeweb, estrazione del 18 novembre 2026; la metallurgia è senza l'oro. BACI conta tutta l'Italia, Istat solo le province dei 12 territori. Le lampade (9405) sono negli apparecchi elettrici, i prefabbricati (9406) fuori da tutte le filiere.</p>
+    </section>
+
+    <section class="lx-card" id="ma-mercato">
+      <h2>Il mercato in breve</h2>
+      <p class="lx-take" data-draw="ma-sintesi">-</p>
+      <div data-draw="ma-testo" data-slot="mercato_nota"></div>
+    </section>
+
+    <section class="lx-card" id="ma-accesso">
+      <h2>1. Quanto costa entrare: dazi e tasse all'import</h2>
+      <div data-draw="ma-testo" data-slot="accesso_nota" data-default="Paesi UE: mercato unico, nessun dazio e nessuna dogana. Per i Paesi fuori dall'UE: dazio per la merce di origine Italia (UE) e dazio normale per chi non ha accordi. Dove la riga è una famiglia di prodotti, il dazio è la media semplice delle voci doganali nazionali, con il valore minimo e massimo."></div>
+      <div class="lx-wrap">
+        <table class="lx-ma-acc">
+          <thead><tr>
+            <th>Famiglia o prodotto</th>
+            <th>Codici doganali</th>
+            <th class="n">Dazio per merce UE (%)</th>
+            <th class="n">Dazio per merce UE, da - a (%)</th>
+            <th class="n">Dazio normale (%)</th>
+            <th class="n">Voci doganali</th>
+            <th class="w-nota">Note</th>
+            <th>Aggiornato al</th>
+          </tr></thead>
+          <tbody data-draw="ma-tab-acc"></tbody>
+        </table>
+      </div>
+      <h3>Tasse all'importazione</h3>
+      <div class="lx-wrap">
+        <table class="lx-ma-tax">
+          <thead><tr>
+            <th>Voce</th>
+            <th>Aliquota</th>
+            <th>Su cosa si calcola</th>
+          </tr></thead>
+          <tbody data-draw="ma-tab-tax"></tbody>
+        </table>
+      </div>
+      <div data-draw="ma-testo" data-slot="tasse_nota" data-default="Le tasse non si sommano in modo semplice: ognuna ha la sua base. Sono il quadro da conoscere, non un preventivo."></div>
+      <div id="ma-cal-box" hidden>
+        <h3 data-draw="ma-cal-titolo">-</h3>
+        <div data-draw="ma-testo" data-slot="calendario_nota"></div>
+        <div class="lx-wrap">
+          <table class="lx-ma-cal">
+            <thead><tr>
+              <th>Da quando</th>
+              <th class="n">Dazio per merce UE (%)<span data-draw="ma-cal-th" data-slot="calendario_col_ue"></span></th>
+              <th class="n">Dazio normale (%)<span data-draw="ma-cal-th" data-slot="calendario_col_normale"></span></th>
+            </tr></thead>
+            <tbody data-draw="ma-tab-cal"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="lx-card" id="ma-trasporto">
+      <h2>2. Quanto pesa il trasporto</h2>
+      <div data-draw="ma-testo" data-slot="trasporto_nota"></div>
+      <h3>Quanto costa spedire: un container o un camion</h3>
+      <div data-draw="ma-testo" data-slot="spedizione_nota" data-default="Nolo medio 2025 dall'Italia verso l'area del Paese, servizi accessori esclusi. Fonte: Banca d'Italia, Indagine sui trasporti internazionali di merci - 2025 (19 giugno 2026), Tavole 1 e 4; dollari convertiti con il cambio medio BCE 2025 (1,13). Medie su tutte le merci e su aree ampie: un ordine di grandezza, non un preventivo. Scrivendo il valore di un ordine si vede quanto peserebbe il nolo."></div>
+      <div class="lx-controls"><label>Valore dell'ordine (euro) <input type="number" id="inp-ma-ordine" min="1000" step="1000" value="50000" class="dash-select" style="width:9em"></label></div>
+      <div class="lx-wrap">
+        <table class="lx-ma-sped">
+          <thead><tr>
+            <th>Come</th>
+            <th>Area (Banca d'Italia)</th>
+            <th>Nolo medio 2025</th>
+            <th class="n">Nolo in euro (2025)</th>
+            <th class="n">Var. sul 2024 (%)</th>
+            <th class="n">Costo medio per tonnellata (euro, 2025)</th>
+            <th class="n">Peso sull'ordine (%)</th>
+          </tr></thead>
+          <tbody data-draw="ma-tab-sped"></tbody>
+        </table>
+      </div>
+      <h3>Valore per chilo e peso del trasporto, per famiglia o prodotto</h3>
+      <div data-draw="ma-testo" data-slot="trasporto_tab_nota"></div>
+      <div class="lx-wrap">
+        <table class="lx-ma-tr">
+          <thead><tr>
+            <th>Famiglia o prodotto</th>
+            <th class="n">Export italiano nel Paese (mln euro, 2025)</th>
+            <th class="n">Export italiano nel Paese (mln euro, 2023)</th>
+            <th class="n">Peso (tonnellate, 2025)</th>
+            <th class="n">Valore per chilo (euro, 2025)</th>
+            <th class="n">Valore per chilo (euro, 2023)</th>
+            <th class="n">Peso stimato del trasporto (%, 2025)</th>
+            <th class="n">Nolo e assicurazione sul valore FOB (%; anni nella nota sopra)</th>
+            <th class="w-nota">Note</th>
+          </tr></thead>
+          <tbody data-draw="ma-tab-tr"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="lx-card" id="ma-requisiti">
+      <h2>3. Cosa serve per vendere</h2>
+      <div data-draw="ma-testo" data-slot="requisiti_nota"></div>
+      <div class="lx-wrap">
+        <table class="lx-ma-req">
+          <thead><tr>
+            <th>Vale per</th>
+            <th>Tema</th>
+            <th>Cosa sapere</th>
+            <th>Fonte</th>
+          </tr></thead>
+          <tbody data-draw="ma-tab-req"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="lx-card" id="ma-concorrenti">
+      <h2>4. Chi vende nel Paese</h2>
+      <h3>L'Italia famiglia per famiglia</h3>
+      <div data-draw="ma-testo" data-slot="conc_ita_nota"></div>
+      <div class="lx-wrap">
+        <table class="lx-ma-ita">
+          <thead><tr>
+            <th>Famiglia o prodotto</th>
+            <th class="n">Import del Paese (mln euro, 2025)</th>
+            <th class="n">Posizione dell'Italia (2025)</th>
+            <th class="n">Quota Italia (%, 2025)</th>
+            <th class="n">Var. quota 2023-25 (punti)</th>
+          </tr></thead>
+          <tbody data-draw="ma-tab-ita"></tbody>
+        </table>
+      </div>
+      <h3>I concorrenti</h3>
+      <div class="lx-controls">
+        <label>Famiglia o prodotto
+          <select class="dash-select" data-draw="ma-sel-fam" aria-label="Famiglia di prodotti per i concorrenti"></select>
+        </label>
+      </div>
+      <p class="lx-take" data-draw="ma-conc-sintesi">-</p>
+      <div data-draw="ma-testo" data-slot="conc_nota"></div>
+      <div class="lx-wrap">
+        <table class="lx-ma-conc">
+          <thead><tr>
+            <th class="n">Posizione (2025)</th>
+            <th>Fornitore</th>
+            <th class="n">Venduto nel Paese (mln euro, 2025)</th>
+            <th class="n">Quota (%, 2025)</th>
+            <th class="n">Quota (%, 2023)</th>
+            <th class="n">Var. quota 2023-25 (punti)</th>
+          </tr></thead>
+          <tbody data-draw="ma-tab-conc"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <details id="ma-metodo">
+      <summary>Fonti e limiti</summary>
+      <ul data-draw="ma-metodo"></ul>
+    </details>
+  </section>
+
+  <section class="lx-sec" id="sez-fonti" hidden>
+    <p class="lx-take" id="fonti-intro">Questa scheda dice da dove vengono i numeri della pagina, quanto sono recenti e quando cambiano. Tutti i numeri vengono da fonti pubbliche.</p>
+
+    <section class="lx-card" id="fonti-recenti">
+      <h2>Quanto sono recenti i dati</h2>
+      <div class="lx-wrap">
+        <table class="lx-fonti-tab">
+          <thead><tr>
+            <th>Fonte</th>
+            <th>Cosa dà alla pagina</th>
+            <th>Dati usati oggi</th>
+            <th>Prossimo dato della fonte</th>
+            <th>Schede che cambiano</th>
+          </tr></thead>
+          <tbody data-draw="fonti-tab"></tbody>
+        </table>
+      </div>
+      <p class="lx-note">"Prossimo dato della fonte" è quando la fonte pubblica il dato nuovo. Nella pagina il dato arriva dopo il ricalcolo, il controllo separato e l'approvazione.</p>
+    </section>
+
+    <section class="lx-card lx-txt" id="fonti-metodo">
+      <h2>Come aggiorniamo</h2>
+      <ol class="lx-passi">
+        <li><span class="lx-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M11 4a7 7 0 1 0 0 14a7 7 0 1 0 0-14M16 16l5 5"/></svg></span><div><span class="lx-num">1</span> <b>Controllo delle novità, due volte al mese.</b> Si guarda se le fonti hanno pubblicato dati nuovi e se sono cambiati dazi o accordi commerciali. Tasse e regole si controllano ogni trimestre.</div></li>
+        <li><span class="lx-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M4 20h16"/></svg></span><div><span class="lx-num">2</span> <b>Dato nuovo.</b> Si scarica, si confronta con quello di prima e si ricalcolano, con le stesse regole, tutti i numeri che dipendono da quella fonte.</div></li>
+        <li><span class="lx-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6zM8.5 12l2.5 2.5 4.5-5"/></svg></span><div><span class="lx-num">3</span> <b>Controllo separato.</b> Un controllo fatto a parte rispetto al calcolo rifà le verifiche principali partendo dai dati delle fonti.</div></li>
+        <li><span class="lx-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6zM15 3v4h4M9 14l2 2 4-4"/></svg></span><div><span class="lx-num">4</span> <b>Pubblicazione.</b> Solo dopo il controllo e l'approvazione del responsabile. La data in testa alla pagina dice quando è stata aggiornata.</div></li>
+      </ol>
+      <h3>Dazi: tre livelli</h3>
+      <ul class="lx-livelli">
+        <li><span class="lx-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12zM12 9a3 3 0 1 0 0 6a3 3 0 1 0 0-6"/></svg></span><div>Controllo leggero, due volte al mese: si guardano le novità ufficiali (tariffa e provvedimenti degli Stati Uniti, accordi dell'UE, avvisi della Commissione europea).</div></li>
+        <li><span class="lx-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6l1.5 1.5L8 5M4 12l1.5 1.5L8 11M4 18l1.5 1.5L8 17M11 6h9M11 12h9M11 18h9"/></svg></span><div>Controllo pieno, ogni trimestre: si confrontano i dazi voce per voce con quelli in pagina.</div></li>
+        <li><span class="lx-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14.5-4.5M4 4v3h3M4 13a8 8 0 0 0 14.5 4.5M20 20v-3h-3"/></svg></span><div>Ricalcolo: solo se il dazio medio di una coppia Paese-filiera cambia di almeno 0,5 punti, o se una frase della pagina non è più giusta.</div></li>
+      </ul>
+      <h3>Medie degli anni</h3>
+      <p>Liste e soglia usano la media 2023-2025. Passeranno alla media 2024-2026 una volta sola, quando Istat ed Eurostat avranno l'anno 2026 completo e ONU Comtrade lo avrà per almeno 10 dei 12 Paesi fuori UE (previsto in estate 2027). Fino ad allora cambia solo il periodo più recente.</p>
+    </section>
+
+    <section class="lx-card lx-txt" id="fonti-uso">
+      <h2>Cosa vuol dire per chi usa la pagina</h2>
+      <ul>
+        <li>I numeri cambiano solo quando la pagina viene aggiornata: la data è in testa alla pagina.</li>
+        <li>Dazi e regole cambiano spesso. Prima di ogni decisione vanno ricontrollati sulla fonte ufficiale indicata nella riga.</li>
+        <li>Un dato nuovo può cambiare l'ordine dei Paesi nelle liste. Il registro qui sotto dice cosa è cambiato a ogni aggiornamento.</li>
+      </ul>
+    </section>
+
+    <section class="lx-card" id="fonti-registro">
+      <h2>Registro degli aggiornamenti</h2>
+      <p class="lx-note">Date in ora di Roma.</p>
+      <div class="lx-wrap">
+        <table class="lx-fonti-reg">
+          <thead><tr>
+            <th>Data</th>
+            <th>Cosa è cambiato</th>
+          </tr></thead>
+          <tbody data-draw="fonti-reg"></tbody>
+        </table>
+      </div>
+    </section>
+  </section>
+
+  <details id="metodo">
+    <summary>Come sono fatti i numeri e limiti</summary>
+    <ul>
+      <li>Territori: 12 gruppi di province, gli stessi in tutta la pagina. Export dei territori: Istat Coeweb, somma delle province di ogni territorio, media 2023-2025, estrazione del 18 novembre 2026. Oro: Istat, voce 97 della classificazione internazionale delle merci (SITC), per provincia, estrazione del 20 novembre 2026. Il primo semestre 2026 è provvisorio.</li>
+      <li>Perimetro del territorio: export medio 2023-2025 nelle filiere da almeno 20 milioni l'anno nel territorio, senza raffinati, farmaci, auto finite, mezzi di trasporto, oro e gioielli. Dalla metallurgia si toglie solo l'oro: alluminio, rame e gli altri metalli non ferrosi restano.</li>
+      <li>Export mancante: quanto il territorio venderebbe in più in un Paese se nella filiera mandasse lì la stessa quota del resto d'Italia. È pesato per la quota di PMI del settore. Tessile, abbigliamento e pelle e calzature sono confrontati con Veneto Ovest e Trentino Alto Adige; Veneto Est e Friuli Venezia Giulia; Emilia Romagna e Marche; Basilicata, Puglia e Molise, dove la moda è fatta soprattutto da PMI. È una misura di spazio, non una previsione.</li>
+      <li>Esclusi dal calcolo dell'export mancante:
+        <ul>
+          <li>filiere con oltre metà dell'export in un solo Paese;</li>
+          <li>confronti in cui il resto d'Italia è fatto per oltre metà da un solo territorio;</li>
+          <li>metallurgia verso Svizzera, Emirati Arabi Uniti, Hong Kong e Turchia, i Paesi dell'oro;</li>
+          <li>Paesi con rischio imprese SACE sopra 70.</li>
+        </ul>
+        Se una riga ha più motivi, la nota ne indica uno, nell'ordine dell'elenco. Russia e Bielorussia sono fuori da tutta l'analisi. Non entrano nei calcoli e non contano nella posizione di un Paese tra i mercati del territorio.</li>
+      <li>Tabelle con le opportunità: sono elencate le coppie territorio-filiera-Paese con almeno 1 milione di export mancante o almeno 5 milioni di export del territorio. Le altre non compaiono riga per riga, ma sono nei totali delle liste, della matrice e delle filiere.</li>
+      <li>Soglia: un Paese entra in lista se l'export mancante vale almeno lo 0,5% del perimetro del territorio.</li>
+      <li>Domanda: import del Paese da tutto il mondo nella filiera, media 2023-2025 e crescita, in euro. Non conta la merce che il Paese reimporta da sé stesso. Fonti: ONU Comtrade per i 12 Paesi fuori UE (dollari in euro con il cambio medio BCE di ogni anno), Eurostat per i 19 Paesi UE. Filiere ricostruite dai codici doganali con la stessa tabella in tutte le schede: i codici sono nella scheda Mercato e accesso. Quota Italia media 2023-2025: import medio dall'Italia diviso import medio. Nelle liste domanda e quota sono medie delle filiere, pesate per l'export mancante.</li>
+      <li>Manca la domanda per i Paesi fuori dai 31 con dati ONU o Eurostat, per esempio Emirati Arabi Uniti, Hong Kong e Turchia.</li>
+      <li>Regole di calcolo. Resto d'Italia: somma degli altri 11 territori. Le quote del territorio e del resto d'Italia sono sul loro export mondiale della filiera. Media trainata da un territorio: un solo altro territorio fa più di metà dell'export del resto d'Italia in quella filiera e Paese. Filiere concentrate, metallurgia verso i Paesi dell'oro e rischio imprese SACE sono tolti solo dall'export mancante. Restano nel perimetro e nella lista Consolidare. Peso PMI: quota PMI del settore divisa per 0,49; le filiere senza quota PMI (per esempio agricoltura e pesca) hanno peso 1. HHI: calcolato sull'export core PMI 2025 verso tutti i Paesi. Pesca, tabacco e stampa, che la tabella dei codici non comprende, usano tutto il capitolo doganale (03, 24, 49). Arrotondamento commerciale (da 5 in su), una sola volta, sul valore finale. Nei numeri in miliardi la pagina mostra due decimali.</li>
+      <li>Export, liste e domanda ricalcolati al 21 novembre 2026; dazi aggiornati al 24 novembre 2026. Prossimo aggiornamento dei dati Istat dopo l'uscita dell'11 dicembre 2026.</li>
+      <li>Fonti, tutte pubbliche. Export: Istat Coeweb (province, oro con la classificazione SITC). Import dei Paesi e concorrenti: ONU Comtrade ed Eurostat Comext; controllo con BACI del CEPII. Quota PMI: Annuario Istat-ICE 2026. Rischio imprese dei Paesi, usato solo per escludere quelli sopra 70: SACE, Mappa dell'Export 2026. Distretti: Monitor dei distretti Intesa Sanpaolo. Dazi: tariffe doganali ufficiali dei Paesi. Tasse: leggi e autorità fiscali e doganali dei Paesi; IVA dei Paesi UE: Your Europe. Regole: EUR-Lex e fonti ufficiali dei Paesi, indicate riga per riga. Calendario UE-Mercosur: lista delle concessioni del Brasile (Siscomex) e allegato 2-A dell'accordo. Cambi dollaro-euro: BCE. Trasporto: Eurostat (valore e peso dell'export italiano), ONU Comtrade (nolo e assicurazione) e Banca d'Italia (noli). Accordi e contesto dei Paesi: Commissione europea e fonti indicate nei riquadri. Dove una fonte ufficiale non era raggiungibile, la riga indica la fonte secondaria usata.</li>
+      <li>Licenze e riuso. Istat: dati con licenza Creative Commons CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/deed.it); i numeri della pagina sono elaborazioni su dati Istat. Eurostat e Commissione europea: riuso citando la fonte (Decisione 2011/833/UE); i numeri sono elaborazioni su dati Eurostat. Banca d'Italia: noli dall'Indagine sui trasporti internazionali di merci; conversione in euro e peso sull'ordine sono elaborazioni della pagina. BCE: cambi medi usati come pubblicati. BACI del CEPII: licenza Etalab 2.0. ONU Comtrade: quote, crescite e indicatori sono elaborazioni sui dati.</li>
+      <li>Territori con filiere simili: per ogni territorio, i due territori con l'indice di somiglianza più alto. L'indice dice quanta parte dell'export nel perimetro i due territori hanno nelle stesse filiere (media 2023-2025). Casi a confronto: nelle filiere in comune, i Paesi dove il territorio simile esporta almeno 10 milioni l'anno e ha una quota più alta di almeno 3 punti. L'export in più usa la regola dell'export mancante, peso PMI compreso, con un solo territorio come termine di paragone invece del resto d'Italia. Stesse esclusioni dell'export mancante. Tessile, abbigliamento e pelle e calzature: a confronto solo se il territorio simile è tra Veneto Ovest e Trentino Alto Adige; Veneto Est e Friuli Venezia Giulia; Emilia Romagna e Marche; Basilicata, Puglia e Molise. Se il territorio successivo ha un indice quasi uguale (meno di mezzo punto di differenza), la frase che compare passando sopra lo dice.</li>
+      <li>Le liste sono ipotesi da verificare con le imprese. I valori 2025 di province e regioni nel riquadro "Regioni e province" sono controllati con Istat Coeweb (scarichi del 20 e del 22 novembre 2026).</li>
+      <li>Date delle fonti, prossimi aggiornamenti e registro dei cambi: scheda "Fonti e aggiornamenti".</li>
+      <li>A cura di Jacopo Naidi.</li>
+    </ul>
+  </details>
+</div>
+<script src="js/d3.v7.min.js"></script>
+<script src="js/lx-dash.js"></script>
+<script src="js/lx-base.js"></script>
+<script src="js/lx-dr.js"></script>
+<script src="js/lx-altro.js"></script>
+<script src="js/lx-ma.js"></script>
+<script src="js/lx-fonti.js"></script>
+</body>
+</html>
