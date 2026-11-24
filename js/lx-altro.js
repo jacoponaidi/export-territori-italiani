@@ -53,22 +53,28 @@ dash.draw('barre-paese', (el) => {
   if (!rows.length) { el.textContent = 'Nessun dato di domanda per questo Paese.'; return; }
   const W = el.clientWidth || 640, bh = 24, m = { t: 22, r: 120, b: 8, l: 10 };
   const svg = d3.select(el).append('svg').attr('width', '100%').attr('role', 'img').attr('aria-label', "Import del Paese per filiera e parte che arriva dall'Italia");
+  // spazio a destra misurato sulla scritta più lunga accanto alle barre
+  const val = (r) => `${f.int(r.import_mln)} · ${f.pctd(r.crescita_import_pct)} · IT ${f.dec(r.quota_italia_pct)}%`;
+  const prova = svg.append('g').selectAll('text').data(rows).join('text').attr('class', 'lab2').text(val);
+  let rw = 0; prova.each(function () { rw = Math.max(rw, this.getComputedTextLength()); }); prova.remove();
+  m.r = Math.ceil(rw) + 10;
   const labs = svg.append('g').selectAll('text').data(rows).join('text').attr('class', 'lab2').text((r) => r.filiera);
   let lw = 0; labs.each(function () { lw = Math.max(lw, this.getComputedTextLength()); });
-  m.l = Math.min(lw + 14, W * 0.35);
+  m.l = Math.min(lw + 14, Math.max(80, W * 0.35));
+  LX.accorcia(labs, m.l - 12);
   const H = m.t + m.b + rows.length * bh;
   svg.attr('viewBox', `0 0 ${W} ${H}`);
-  const x = d3.scaleLinear().domain([0, d3.max(rows, (r) => r.import_mln)]).nice().range([m.l, W - m.r]);
+  const x = d3.scaleLinear().domain([0, d3.max(rows, (r) => r.import_mln)]).nice().range([m.l, Math.max(m.l + 40, W - m.r)]);
   const y = d3.scaleBand().domain(rows.map((r) => r.chiave)).range([m.t, H - m.b]).padding(0.25);
   labs.attr('x', m.l - 8).attr('text-anchor', 'end').attr('y', (r) => y(r.chiave) + y.bandwidth() / 2 + 4);
-  svg.append('g').attr('transform', `translate(0,${m.t})`).call(d3.axisTop(x).ticks(Math.max(2, Math.floor(W / 140))).tickFormat((v) => f.int(v)))
+  svg.append('g').attr('transform', `translate(0,${m.t})`).call((W - m.l - m.r) < 180 ? d3.axisTop(x).tickValues(x.domain()).tickFormat((v) => f.int(v)) : d3.axisTop(x).ticks(Math.max(2, Math.floor((W - m.l - m.r) / 90))).tickFormat((v) => f.int(v)))
     .call((g) => g.selectAll('line,path').style('stroke', 'var(--cds-chart-axis)'));
   const tip = LX.tip(el);
   const g = svg.append('g').selectAll('g').data(rows).join('g');
   g.append('rect').attr('x', m.l).attr('y', (r) => y(r.chiave)).attr('height', y.bandwidth()).attr('width', (r) => x(r.import_mln) - m.l).style('fill', 'var(--cds-chart-muted)');
   g.append('rect').attr('x', m.l).attr('y', (r) => y(r.chiave)).attr('height', y.bandwidth()).attr('width', (r) => Math.max(0, x(r.import_da_italia_mln || 0) - m.l)).style('fill', dash.colors[0]);
   g.append('text').attr('x', (r) => x(r.import_mln) + 4).attr('y', (r) => y(r.chiave) + y.bandwidth() / 2 + 4)
-    .text((r) => `${f.int(r.import_mln)} · ${f.pctd(r.crescita_import_pct)} · IT ${f.dec(r.quota_italia_pct)}%`);
+    .text(val);
   g.append('rect').attr('x', 0).attr('width', W).attr('y', (r) => y(r.chiave)).attr('height', y.bandwidth()).style('fill', 'transparent')
     .on('pointerenter pointermove', (ev, r) => tip.show(ev, `${r.filiera}: il Paese importa ${f.int(r.import_mln)} mln l'anno (media 2023-25), ${f.pctd(r.crescita_import_pct)} dal 2023 al 2025. Dall'Italia ${f.int(r.import_da_italia_mln)} mln l'anno, quota ${f.dec(r.quota_italia_pct)}% (media 2023-25), ${f.pt(r.var_quota_italia_punti)} punti dal 2023 al 2025.`))
     .on('pointerleave', () => tip.hide());
@@ -142,6 +148,7 @@ dash.draw('tab-fil-mercato', (tb) => {
   const f = LX.fmt;
   const all = s.data.filter((r) => r.cpa === LX.filiera).sort((a, b) => b.import_mln - a.import_mln);
   const rows = LX.filTutti ? all : all.slice(0, 15);
+  if (!rows.length) { LX.vuota(tb, 8, 'Per questa filiera non ci sono dati sulla domanda dei Paesi.'); return; }
   LX.rows(tb, rows, [
     { text: (r) => r.paese },
     { n: 1, text: (r) => f(r.import_mln, 'int') },
@@ -180,6 +187,7 @@ dash.draw('tab-fil-opp', (tb) => {
   const N = LX.N, f = LX.fmt;
   const rows = s.data.filter((r) => r.cpa === LX.filiera && N(r.export_mancante_mln) >= 5)
     .sort((a, b) => N(b.export_mancante_mln) - N(a.export_mancante_mln)).slice(0, 50);
+  if (!rows.length) { LX.vuota(tb, 9, 'Nessun territorio ha almeno 5 milioni di export mancante in questa filiera.'); return; }
   LX.rows(tb, rows, [
     { text: (r) => LX.drNome(r.dr) },
     { text: (r) => r.paese },

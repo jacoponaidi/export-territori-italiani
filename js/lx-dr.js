@@ -97,14 +97,15 @@ dash.draw('vuoto', (el) => {
   const svg = d3.select(el).append('svg').attr('width', '100%').attr('role', 'img').attr('aria-label', "Quota del Paese nell'export del territorio e del resto d'Italia per filiera");
   const labs = svg.append('g').selectAll('text').data(rows).join('text').attr('class', 'lab2').text((r) => r.filiera);
   let lw = 0; labs.each(function () { lw = Math.max(lw, this.getComputedTextLength()); });
-  m.l = Math.min(lw + 14, W * 0.4);
+  m.l = Math.min(lw + 14, Math.max(80, W * 0.4));
+  LX.accorcia(labs, m.l - 12);
   const H = m.t + m.b + rows.length * bh;
   svg.attr('viewBox', `0 0 ${W} ${H}`);
   const xm = d3.max(rows, (r) => Math.max(N(r.quota_dr_pct), N(r.quota_resto_italia_pct)));
   const x = d3.scaleLinear().domain([0, xm]).nice().range([m.l, W - m.r]);
   const y = d3.scaleBand().domain(rows.map((r) => r.chiave)).range([m.t, H - m.b]).padding(0.3);
   labs.attr('x', m.l - 8).attr('text-anchor', 'end').attr('y', (r) => y(r.chiave) + y.bandwidth() / 2 + 4);
-  svg.append('g').attr('transform', `translate(0,${m.t})`).call(d3.axisTop(x).ticks(Math.max(2, Math.floor(W / 120))).tickFormat((v) => f.int(v) + '%'))
+  svg.append('g').attr('transform', `translate(0,${m.t})`).call(d3.axisTop(x).ticks(Math.max(2, Math.floor((W - m.l - m.r) / 70))).tickFormat((v) => f.int(v) + '%'))
     .call((g) => g.selectAll('line,path').style('stroke', 'var(--cds-chart-axis)'));
   const tip = LX.tip(el);
   const g = svg.append('g').selectAll('g').data(rows).join('g');

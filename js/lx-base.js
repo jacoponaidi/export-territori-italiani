@@ -21,6 +21,7 @@ window.LX = window.LX || { dr: '1', oppPaese: '', oppFil: '', soglia: false, vuo
   LX.fmt = (v, kind) => (N(v) === null ? '' : LX.f[kind](N(v)));
   LX.sc = (v) => (N(v) === null ? '' : N(v) > 0 ? 'good' : N(v) < 0 ? 'bad' : '');
   LX.rows = function (tbody, rows, cols, keyFn, rowClass) {
+    d3.select(tbody).selectAll('tr.lx-vuota').remove();
     const tr = d3.select(tbody).selectAll('tr').data(rows, keyFn).join('tr')
       .attr('data-key', keyFn).attr('class', rowClass || null);
     tr.selectAll('td').data((r) => cols.map((c) => ({ c, r }))).join('td')
@@ -34,10 +35,30 @@ window.LX = window.LX || { dr: '1', oppPaese: '', oppFil: '', soglia: false, vuo
       show(ev, text) {
         const [px, py] = d3.pointer(ev, el);
         t.textContent = text; t.style.display = '';
-        t.style.left = Math.max(0, Math.min(px + 12, el.clientWidth - 290)) + 'px'; t.style.top = (py + 12) + 'px';
+        // dentro il riquadro e dentro lo schermo, anche quando la tabella scorre di lato
+        const er = el.getBoundingClientRect(), tw = t.offsetWidth || 280;
+        const minL = Math.max(0, -er.left + 4), maxL = Math.min(el.scrollWidth, window.innerWidth - er.left) - tw - 4;
+        t.style.left = Math.max(minL, Math.min(px + 12, maxL)) + 'px'; t.style.top = (py + 12) + 'px';
       },
       hide() { t.style.display = 'none'; },
     };
+  };
+  // accorcia con "…" le etichette di un grafico più lunghe di max pixel; il nome intero resta nel tooltip del browser
+  LX.accorcia = function (sel, max) {
+    sel.each(function () {
+      const full = this.textContent;
+      if (this.getComputedTextLength() <= max) return;
+      let t = full;
+      while (t.length > 3 && this.getComputedTextLength() > max) { t = t.slice(0, -1); this.textContent = t.trimEnd() + '…'; }
+      const ti = document.createElementNS('http://www.w3.org/2000/svg', 'title'); ti.textContent = full; this.appendChild(ti);
+    });
+  };
+  // tabella senza righe: una riga sola con il messaggio
+  LX.vuota = function (tb, n, testo) {
+    d3.select(tb).selectAll('tr').remove();
+    const tr = document.createElement('tr'); tr.className = 'row-muted lx-vuota';
+    const td = document.createElement('td'); td.colSpan = n; td.textContent = testo;
+    tr.append(td); tb.append(tr);
   };
   LX.empty = function (el, s) {
     el.replaceChildren();
@@ -72,12 +93,29 @@ dash.draw('drv', (el) => {
   el.textContent = el.dataset.fmt === 'text' ? String(v) : LX.f[el.dataset.fmt](+v);
 });
 
+// ridisegna le parti di una scheda quando diventa visibile: i grafici misurano larghezza e testi, che in una scheda nascosta valgono zero
+LX.ridisegnaScheda = function (id) {
+  const sec = document.getElementById(id);
+  if (!sec) return;
+  [...new Set([...sec.querySelectorAll('[data-draw]')].map((e) => e.dataset.draw))].forEach((n) => dash.draw(n));
+};
 document.querySelectorAll('.lx-tab').forEach((b) => b.addEventListener('click', () => {
   const id = b.dataset.tab;
   document.querySelectorAll('.lx-tab').forEach((x) => x.setAttribute('aria-selected', x === b ? 'true' : 'false'));
   document.querySelectorAll('.lx-sec').forEach((s) => { s.hidden = s.id !== id; });
   dash.setLink(id);
+  LX.ridisegnaScheda(id);
 }));
+// al cambio di larghezza della finestra si ridisegnano i grafici della scheda visibile
+(function () {
+  let t = null, w = window.innerWidth;
+  window.addEventListener('resize', () => {
+    if (window.innerWidth === w) return;
+    w = window.innerWidth;
+    clearTimeout(t);
+    t = setTimeout(() => { const s = [...document.querySelectorAll('.lx-sec')].find((x) => !x.hidden); if (s) LX.ridisegnaScheda(s.id); }, 200);
+  });
+})();
 (function () {
   const h = (location.hash || '').slice(1);
   if (h && document.getElementById(h) && document.getElementById(h).classList.contains('lx-sec')) {
