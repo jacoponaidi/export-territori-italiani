@@ -134,13 +134,25 @@ body { padding: 24px 28px 48px; max-width: 1280px; margin: 0 auto; font-size: va
 .lx #sez-fonti .lx-ic { flex: 0 0 auto; width: 34px; height: 34px; border-radius: 17px; background: var(--color-panel); border: 1px solid var(--color-border-line); display: flex; align-items: center; justify-content: center; }
 .lx #sez-fonti .lx-ic svg { width: 20px; height: 20px; fill: none; stroke: var(--color-fg); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .lx #sez-fonti .lx-num { color: var(--color-fg-muted); font-variant-numeric: tabular-nums; }
+.lx tbody[data-draw="tab-opp"] tr { cursor: pointer; }
+.lx tbody[data-draw="tab-opp"] tr[aria-selected="true"] td { background: var(--color-panel); box-shadow: inset 0 -2px 0 var(--color-fg-muted); }
+.lx .lx-grp { display: flex; flex-direction: column; gap: var(--cds-gap-sm); border-top: 1px solid var(--color-border-line); padding-top: var(--cds-gap-md); }
+.lx .lx-grp table, .lx #dr-nascosto table, .lx #filiera-gruppi table { table-layout: fixed; }
+.lx .lx-grp th, .lx #dr-nascosto th, .lx #filiera-gruppi th { white-space: normal; vertical-align: bottom; }
+.lx .lx-grp th:first-child { width: 40%; }
+.lx .lx-grp table { min-width: 560px; }
+.lx #dr-nascosto table { min-width: 960px; }
+.lx #dr-nascosto th:nth-child(2) { width: 26%; }
+.lx #filiera-gruppi .lx-grp-dr th:first-child { width: 50%; }
+.lx #filiera-gruppi table:not(.lx-grp-dr) { min-width: 560px; }
+@media (max-width: 480px) { .lx #filiera-gruppi .lx-grp-dr th:first-child { width: 40%; } }
 </style>
 </head>
 <body>
 <div class="lx" lang="it">
   <header id="titolo">
     <h1>Export dei territori italiani: filiere, mercati e accesso</h1>
-    <p class="lx-sub">A cura di Jacopo Naidi. Dati aggiornati al 24 novembre 2026, da fonti pubbliche, ricalcolati e verificati: l'elenco è in fondo alla pagina, in "Come sono fatti i numeri e limiti". Date e prossimi aggiornamenti delle fonti sono nella scheda "Fonti e aggiornamenti".</p>
+    <p class="lx-sub">A cura di Jacopo Naidi. Dati aggiornati al 25 novembre 2026, da fonti pubbliche, ricalcolati e verificati: l'elenco è in fondo alla pagina, in "Come sono fatti i numeri e limiti". Date e prossimi aggiornamenti delle fonti sono nella scheda "Fonti e aggiornamenti".</p>
   </header>
 
   <p class="lx-take" id="come-funziona">La pagina divide l'Italia in 12 territori, ognuno fatto da un gruppo di province. Per ogni territorio mostra cosa esportano le imprese e verso quali Paesi. Mostra poi dove vendono meno del resto d'Italia negli stessi settori, che qui chiamiamo filiere. Questa differenza è l'export mancante: uno spazio da capire con le imprese, non una previsione di vendita. Accanto c'è la domanda del Paese: quanto importa da tutto il mondo, se cresce e quanto pesa l'Italia. Uno spazio grande, in un mercato grande e in crescita, è un tema da approfondire.</p>
@@ -294,6 +306,7 @@ body { padding: 24px 28px 48px; max-width: 1280px; margin: 0 auto; font-size: va
         <li>rischio imprese SACE sopra 70: indice della Mappa dell'Export SACE 2026.</li>
       </ul>
       <p class="lx-note">"Flusso del territorio sotto 10 mln" e "variazione del territorio molto forte" (oltre il 50%) dicono che il confronto con il resto d'Italia non si legge. Non sono elencate le coppie con meno di 1 milione di export mancante e meno di 5 milioni di export del territorio. Sono comunque nei totali delle liste e della matrice.</p>
+      <p class="lx-note">Cliccando una riga si vede la stessa coppia divisa per gruppo di prodotti, più sotto in "Dentro la filiera".</p>
       <div class="lx-wrap">
         <table>
           <thead><tr>
@@ -316,6 +329,47 @@ body { padding: 24px 28px 48px; max-width: 1280px; margin: 0 auto; font-size: va
           <tbody data-draw="tab-opp"></tbody>
         </table>
       </div>
+
+      <div class="lx-grp" id="dr-gruppi">
+        <h3 data-draw="grp-titolo" data-source="gruppi_coppie opportunita"></h3>
+        <p class="lx-note">Spazio nel gruppo: lo stesso calcolo dell'export mancante, fatto per ogni gruppo di prodotti della filiera (classificazione Istat dei prodotti, gruppi a 3 cifre). Di solito è più alto dello spazio della filiera: sulla filiera intera un gruppo dove il territorio è forte copre un gruppo dove è debole, gruppo per gruppo no. Per questo i due numeri non si sommano e non si confrontano.</p>
+        <p class="lx-note">Si vedono i gruppi con almeno 5 milioni l'anno di spazio e almeno 10 milioni l'anno di export del territorio nel Paese. Gli altri gruppi sono contati nella nota sotto la tabella.</p>
+        <div class="lx-wrap">
+          <table data-source="gruppi_coppie" data-row-key="chiave">
+            <thead><tr>
+              <th data-field="gruppo">Gruppo di prodotti</th>
+              <th class="n" data-field="export_dr_medio_mln">Export del territorio nel gruppo (mln/anno, media 2023-25)</th>
+              <th class="n" data-field="quota_dr_pct">Quota nel territorio (%, media 2023-25)</th>
+              <th class="n" data-field="quota_resto_italia_pct">Quota resto d'Italia (%, media 2023-25)</th>
+              <th class="n" data-field="spazio_gruppo_mln">Spazio nel gruppo (mln/anno, media 2023-25)</th>
+            </tr></thead>
+            <tbody data-draw="tab-grp"></tbody>
+          </table>
+        </div>
+        <p class="lx-note" data-draw="grp-altri" data-source="gruppi_coppie gruppi_dr"></p>
+        <p class="lx-note">Quota nel territorio: parte dell'export del territorio nel gruppo che va nel Paese. Quota resto d'Italia: lo stesso per gli altri territori (per tessile, abbigliamento e pelle e calzature, i territori della moda, come nella filiera). Fonte: Istat Coeweb, export delle province per gruppo di prodotti (CPA a 3 cifre), media 2023-2025, estrazione del 25 novembre 2026. Per le province Istat non pubblica un dettaglio più fine. Peso delle PMI: quello della filiera.</p>
+      </div>
+    </section>
+    <section class="lx-card" id="dr-nascosto">
+      <h2>Spazio che la filiera non mostra</h2>
+      <p class="lx-note">Coppie filiera-Paese dove lo spazio della filiera è sotto 5 milioni l'anno, o la filiera è esclusa dal calcolo (il motivo è nella colonna Note), ma in almeno un gruppo della filiera il territorio vende meno del resto d'Italia, sopra la soglia di lettura. Sono temi da verificare con le imprese di quel gruppo, non una previsione di vendita.</p>
+      <div class="lx-wrap">
+        <table data-source="gruppi_coppie" data-row-key="chiave">
+          <thead><tr>
+            <th data-field="filiera">Filiera</th>
+            <th data-field="gruppo">Gruppo di prodotti</th>
+            <th data-field="paese">Paese</th>
+            <th class="n" data-field="export_dr_medio_mln">Export del territorio nel gruppo (mln/anno, media 2023-25)</th>
+            <th class="n" data-field="quota_dr_pct">Quota nel territorio (%, media 2023-25)</th>
+            <th class="n" data-field="quota_resto_italia_pct">Quota resto d'Italia (%, media 2023-25)</th>
+            <th class="n" data-field="spazio_gruppo_mln">Spazio nel gruppo (mln/anno, media 2023-25)</th>
+            <th class="n" data-field="spazio_filiera_mln">Spazio della filiera (mln/anno, media 2023-25)</th>
+            <th data-field="motivo_filiera">Note</th>
+          </tr></thead>
+          <tbody data-draw="tab-nascosto"></tbody>
+        </table>
+      </div>
+      <p class="lx-note">Spazio nel gruppo: lo stesso calcolo dell'export mancante, fatto per ogni gruppo di prodotti della filiera (classificazione Istat dei prodotti, gruppi a 3 cifre). Di solito è più alto dello spazio della filiera: sulla filiera intera un gruppo dove il territorio è forte copre un gruppo dove è debole, gruppo per gruppo no. Per questo i due numeri non si sommano e non si confrontano. Quota nel territorio: parte dell'export del territorio nel gruppo che va nel Paese. Quota resto d'Italia: lo stesso per gli altri territori (per tessile, abbigliamento e pelle e calzature, i territori della moda, come nella filiera). Fonte: Istat Coeweb, export delle province per gruppo di prodotti (CPA a 3 cifre), media 2023-2025, estrazione del 25 novembre 2026. Per le province Istat non pubblica un dettaglio più fine. Peso delle PMI: quello della filiera.</p>
     </section>
 
     <section class="lx-card" id="dr-filiere">
@@ -488,6 +542,40 @@ body { padding: 24px 28px 48px; max-width: 1280px; margin: 0 auto; font-size: va
           <tbody data-draw="tab-fil-dr"></tbody>
         </table>
       </div>
+    </section>
+    <section class="lx-card" id="filiera-gruppi">
+      <h2>La filiera per gruppo di prodotti</h2>
+      <div class="lx-controls">
+        <label>Gruppo di prodotti <select class="dash-select" data-draw="sel-grp" aria-label="Gruppo di prodotti" data-source="gruppi_dr"></select></label>
+      </div>
+      <p class="lx-take" data-draw="grp-fil-msg" data-source="gruppi_dr"></p>
+      <p class="lx-note">Export medio 2023-2025 di ogni territorio nel gruppo e peso del gruppo sulla filiera del territorio.</p>
+      <div class="lx-wrap">
+        <table class="lx-grp-dr" data-source="gruppi_dr" data-row-key="chiave">
+          <thead><tr>
+            <th data-field="dr">Territorio</th>
+            <th class="n" data-field="export_medio_mln">Export nel gruppo (mln/anno, media 2023-25)</th>
+            <th class="n" data-field="peso_su_filiera_pct">Peso del gruppo sulla filiera del territorio (%, media 2023-25)</th>
+          </tr></thead>
+          <tbody data-draw="tab-grp-dr"></tbody>
+        </table>
+      </div>
+      <h3>Dove sono i vuoti più grandi nel gruppo</h3>
+      <p class="lx-note">Coppie territorio-Paese con almeno 5 milioni l'anno di spazio nel gruppo e almeno 10 milioni l'anno di export del territorio nel Paese; le prime 30. Spazio nel gruppo: lo stesso calcolo dell'export mancante, fatto per ogni gruppo di prodotti della filiera (classificazione Istat dei prodotti, gruppi a 3 cifre). Di solito è più alto dello spazio della filiera: sulla filiera intera un gruppo dove il territorio è forte copre un gruppo dove è debole, gruppo per gruppo no. Per questo i due numeri non si sommano e non si confrontano.</p>
+      <div class="lx-wrap">
+        <table data-source="gruppi_coppie" data-row-key="chiave">
+          <thead><tr>
+            <th data-field="dr">Territorio</th>
+            <th data-field="paese">Paese</th>
+            <th class="n" data-field="export_dr_medio_mln">Export del territorio nel gruppo (mln/anno, media 2023-25)</th>
+            <th class="n" data-field="quota_dr_pct">Quota nel territorio (%, media 2023-25)</th>
+            <th class="n" data-field="quota_resto_italia_pct">Quota resto d'Italia (%, media 2023-25)</th>
+            <th class="n" data-field="spazio_gruppo_mln">Spazio nel gruppo (mln/anno, media 2023-25)</th>
+          </tr></thead>
+          <tbody data-draw="tab-grp-vuoti"></tbody>
+        </table>
+      </div>
+      <p class="lx-note">Quota nel territorio: parte dell'export del territorio nel gruppo che va nel Paese. Quota resto d'Italia: lo stesso per gli altri territori (per tessile, abbigliamento e pelle e calzature, i territori della moda, come nella filiera). Fonte: Istat Coeweb, export delle province per gruppo di prodotti (CPA a 3 cifre), media 2023-2025, estrazione del 25 novembre 2026. Per le province Istat non pubblica un dettaglio più fine. Peso delle PMI: quello della filiera.</p>
     </section>
     <section class="lx-card" id="filiera-opp">
       <h2>Dove sono i vuoti più grandi</h2>
@@ -774,17 +862,19 @@ body { padding: 24px 28px 48px; max-width: 1280px; margin: 0 auto; font-size: va
       <li>Licenze e riuso. Istat: dati con licenza Creative Commons CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/deed.it); i numeri della pagina sono elaborazioni su dati Istat. Eurostat e Commissione europea: riuso citando la fonte (Decisione 2011/833/UE); i numeri sono elaborazioni su dati Eurostat. Banca d'Italia: noli dall'Indagine sui trasporti internazionali di merci; conversione in euro e peso sull'ordine sono elaborazioni della pagina. BCE: cambi medi usati come pubblicati. BACI del CEPII: licenza Etalab 2.0. ONU Comtrade: quote, crescite e indicatori sono elaborazioni sui dati.</li>
       <li>Territori con filiere simili: per ogni territorio, i due territori con l'indice di somiglianza più alto. L'indice dice quanta parte dell'export nel perimetro i due territori hanno nelle stesse filiere (media 2023-2025). Casi a confronto: nelle filiere in comune, i Paesi dove il territorio simile esporta almeno 10 milioni l'anno e ha una quota più alta di almeno 3 punti. L'export in più usa la regola dell'export mancante, peso PMI compreso, con un solo territorio come termine di paragone invece del resto d'Italia. Stesse esclusioni dell'export mancante. Tessile, abbigliamento e pelle e calzature: a confronto solo se il territorio simile è tra Veneto Ovest e Trentino Alto Adige; Veneto Est e Friuli Venezia Giulia; Emilia Romagna e Marche; Basilicata, Puglia e Molise. Se il territorio successivo ha un indice quasi uguale (meno di mezzo punto di differenza), la frase che compare passando sopra lo dice.</li>
       <li>Le liste sono ipotesi da verificare con le imprese. I valori 2025 di province e regioni nel riquadro "Regioni e province" sono controllati con Istat Coeweb (scarichi del 20 e del 22 novembre 2026).</li>
+      <li>Dettaglio per gruppo di prodotti: export delle province per gruppo (Istat, classificazione dei prodotti CPA a 3 cifre, il dettaglio più fine pubblicato per provincia), media 2023-2025, estrazione del 25 novembre 2026. Stesso calcolo e stesse esclusioni dell'export mancante, peso PMI della filiera. Lo spazio nel gruppo non si somma e non si confronta con lo spazio della filiera. Si mostrano solo i gruppi con almeno 5 milioni l'anno di spazio e almeno 10 milioni l'anno di export del territorio nel Paese. Filiere con un solo gruppo (bevande, mobili, pesca, tabacco, componenti auto): nessun dettaglio. Metallurgia senza l'oro e occhiali, strumenti e altro senza i gioielli, come nella filiera. Se la filiera del territorio è concentrata in un solo Paese, i suoi gruppi non si mostrano. Se la coppia filiera-Paese è esclusa perché la media è trainata da un territorio, il gruppo può avere spazio: lo dice la nota della riga.</li>
       <li>Date delle fonti, prossimi aggiornamenti e registro dei cambi: scheda "Fonti e aggiornamenti".</li>
       <li>A cura di Jacopo Naidi.</li>
     </ul>
   </details>
 </div>
-<script src="js/d3.v7.min.js"></script>
-<script src="js/lx-dash.js"></script>
-<script src="js/lx-base.js"></script>
-<script src="js/lx-dr.js"></script>
-<script src="js/lx-altro.js"></script>
-<script src="js/lx-ma.js"></script>
-<script src="js/lx-fonti.js"></script>
+<script src="js/d3.v7.min.js?v=2"></script>
+<script src="js/lx-dash.js?v=2"></script>
+<script src="js/lx-base.js?v=2"></script>
+<script src="js/lx-dr.js?v=2"></script>
+<script src="js/lx-altro.js?v=2"></script>
+<script src="js/lx-ma.js?v=2"></script>
+<script src="js/lx-fonti.js?v=2"></script>
+<script src="js/lx-gruppi.js?v=2"></script>
 </body>
 </html>
