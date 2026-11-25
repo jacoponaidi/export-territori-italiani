@@ -141,8 +141,10 @@ body { padding: 24px 28px 48px; max-width: 1280px; margin: 0 auto; font-size: va
 .lx .lx-grp th, .lx #dr-nascosto th, .lx #filiera-gruppi th { white-space: normal; vertical-align: bottom; }
 .lx .lx-grp th:first-child { width: 40%; }
 .lx .lx-grp table { min-width: 560px; }
-.lx #dr-nascosto table { min-width: 960px; }
+.lx #dr-nascosto table { min-width: 1040px; }
+.lx #dr-nascosto th:first-child { width: 11%; }
 .lx #dr-nascosto th:nth-child(2) { width: 26%; }
+.lx #dr-nascosto th:last-child { width: 15%; }
 .lx #filiera-gruppi .lx-grp-dr th:first-child { width: 50%; }
 .lx #filiera-gruppi table:not(.lx-grp-dr) { min-width: 560px; }
 @media (max-width: 480px) { .lx #filiera-gruppi .lx-grp-dr th:first-child { width: 40%; } }
@@ -347,6 +349,7 @@ body { padding: 24px 28px 48px; max-width: 1280px; margin: 0 auto; font-size: va
           </table>
         </div>
         <p class="lx-note" data-draw="grp-altri" data-source="gruppi_coppie gruppi_dr"></p>
+        <p class="lx-note"><a href="#dr-opportunita">Torna a "Tutte le opportunità del territorio"</a></p>
         <p class="lx-note">Quota nel territorio: parte dell'export del territorio nel gruppo che va nel Paese. Quota resto d'Italia: lo stesso per gli altri territori (per tessile, abbigliamento e pelle e calzature, i territori della moda, come nella filiera). Fonte: Istat Coeweb, export delle province per gruppo di prodotti (CPA a 3 cifre), media 2023-2025, estrazione del 25 novembre 2026. Per le province Istat non pubblica un dettaglio più fine. Peso delle PMI: quello della filiera.</p>
       </div>
     </section>
@@ -793,7 +796,7 @@ body { padding: 24px 28px 48px; max-width: 1280px; margin: 0 auto; font-size: va
           <tbody data-draw="fonti-tab"></tbody>
         </table>
       </div>
-      <p class="lx-note">"Prossimo dato della fonte" è quando la fonte pubblica il dato nuovo. Nella pagina il dato arriva dopo il ricalcolo, il controllo separato e l'approvazione.</p>
+      <p class="lx-note">"Prossimo dato della fonte" è quando la fonte pubblica il dato nuovo. Nella pagina il dato arriva più tardi, quando la pagina viene aggiornata.</p>
     </section>
 
     <section class="lx-card lx-txt" id="fonti-metodo">
