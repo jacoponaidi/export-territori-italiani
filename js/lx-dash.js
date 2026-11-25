@@ -5,7 +5,7 @@
   const DATASET = ['dr_scheda', 'distretti', 'liste', 'opportunita', 'mancante_paese', 'filiere_dr', 'dr_simili', 'dr_simili_paesi',
     'domanda_paesi', 'contesto_paesi', 'paese_dr', 'mercati_filiera', 'ma_codici', 'ma_stato', 'ma_testi', 'ma_mercato', 'ma_accesso',
     'ma_tasse', 'ma_calendari', 'ma_spedizione', 'ma_trasporto', 'ma_requisiti', 'ma_concorrenti', 'aggiornamenti',
-    'gruppi_coppie', 'gruppi_dr'];
+    'gruppi_coppie', 'gruppi_dr', 'filiere_anni'];
   const stato = {};
   DATASET.forEach((k) => { stato[k] = { status: 'loading', data: null }; });
   const disegni = new Map();

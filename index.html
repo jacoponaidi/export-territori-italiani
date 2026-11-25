@@ -148,6 +148,40 @@ body { padding: 24px 28px 48px; max-width: 1280px; margin: 0 auto; font-size: va
 .lx #filiera-gruppi .lx-grp-dr th:first-child { width: 50%; }
 .lx #filiera-gruppi table:not(.lx-grp-dr) { min-width: 560px; }
 @media (max-width: 480px) { .lx #filiera-gruppi .lx-grp-dr th:first-child { width: 40%; } }
+.lx .lx-anni-frase { display: flex; flex-direction: column; gap: 4px; max-width: 62em; }
+.lx .lx-anni-frase p:first-child { font-family: var(--font-anthropic-serif); font-size: var(--cds-font-size-heading); }
+.lx .lx-ordina { gap: var(--cds-gap-xs); }
+.lx button.lx-ord { font: inherit; font-size: var(--cds-font-size-caption); padding: 4px 12px; border-radius: 14px; border: 1px solid var(--color-border-line); background: var(--color-bg); color: var(--color-fg); cursor: pointer; }
+.lx button.lx-ord[aria-pressed="true"] { background: var(--color-fg); border-color: var(--color-fg); color: var(--color-bg); }
+.lx .lx-bt { table-layout: fixed; }
+.lx .lx-bt th { white-space: normal; vertical-align: bottom; }
+.lx .lx-scala { display: block; font-weight: 400; font-size: 11px; color: var(--color-fg-muted); }
+.lx .lx-bar { display: flex; align-items: center; gap: 6px; }
+.lx .lx-bar .t { flex: 1 1 auto; min-width: 30px; height: 10px; }
+.lx .lx-bar .t > span { display: block; height: 10px; border-radius: 0 3px 3px 0; }
+.lx .lx-bar .v { flex: 0 0 auto; min-width: 3.2em; text-align: right; white-space: nowrap; }
+.lx .lx-dv { flex: 1 1 auto; min-width: 60px; display: grid; grid-template-columns: 1fr 1fr; height: 10px; }
+.lx .lx-dv .neg { display: flex; justify-content: flex-end; }
+.lx .lx-dv .pos { border-left: 1px solid var(--color-fg-muted); }
+.lx .lx-dv span { display: block; height: 10px; }
+.lx .lx-dv .neg span { background: var(--color-bad); border-radius: 3px 0 0 3px; }
+.lx .lx-dv .pos span { background: var(--color-ok); border-radius: 0 3px 3px 0; }
+.lx .lx-q { display: inline-flex; flex-direction: column; align-items: flex-end; line-height: 1.2; }
+.lx .lx-q small { font-size: 11px; color: var(--color-fg-muted); font-weight: 400; }
+.lx tr.lx-ita td { color: #6b3f17; }
+.lx .lx-anni-tab { min-width: 1500px; }
+.lx .lx-anni-tab th:nth-child(1) { width: 9%; } .lx .lx-anni-tab th.n { width: 5%; } .lx .lx-anni-tab th:nth-child(4), .lx .lx-anni-tab th:nth-child(5), .lx .lx-anni-tab th:nth-child(9) { width: 11%; } .lx .lx-anni-tab th:nth-child(13), .lx .lx-anni-tab th:nth-child(14) { width: 9%; }
+.lx #filiera-mercato table.lx-bt { min-width: 1100px; }
+.lx #filiera-mercato .lx-bt th:nth-child(2), .lx #filiera-mercato .lx-bt th:nth-child(3), .lx #filiera-mercato .lx-bt th:nth-child(7) { width: 15%; }
+.lx #filiera-mercato .lx-bt th.n { width: 8%; }
+.lx #filiera-mercato .lx-bt th:last-child { width: 20%; }
+.lx .lx-pae-tab { min-width: 900px; }
+.lx .lx-pae-tab th:nth-child(1) { width: 16%; } .lx .lx-pae-tab th:nth-child(2), .lx .lx-pae-tab th:nth-child(3), .lx .lx-pae-tab th:nth-child(7) { width: 19%; } .lx .lx-pae-tab th.n { width: 9%; }
+.lx #sez-ma .lx-ma-ita.lx-bt { min-width: 860px; }
+.lx #sez-ma .lx-ma-ita.lx-bt td.n { white-space: normal; }
+.lx #sez-ma .lx-ma-ita.lx-bt th:nth-child(1) { width: 28%; } .lx #sez-ma .lx-ma-ita.lx-bt th:nth-child(2), .lx #sez-ma .lx-ma-ita.lx-bt th:nth-child(3) { width: 22%; } .lx #sez-ma .lx-ma-ita.lx-bt th.n { width: 9.3%; }
+.lx #sez-ma .lx-ma-conc.lx-bt { min-width: 760px; }
+.lx #sez-ma .lx-ma-conc.lx-bt th:nth-child(2) { width: 22%; } .lx #sez-ma .lx-ma-conc.lx-bt th:nth-child(3) { width: 30%; } .lx #sez-ma .lx-ma-conc.lx-bt th.n { width: 12%; }
 </style>
 </head>
 <body>
@@ -377,23 +411,36 @@ body { padding: 24px 28px 48px; max-width: 1280px; margin: 0 auto; font-size: va
 
     <section class="lx-card" id="dr-filiere">
       <h2>Le filiere del territorio</h2>
+      <div class="lx-anni-frase" data-draw="anni-frase"></div>
+      <div class="lx-kpis" id="dr-anni-numeri">
+        <div class="lx-kpi"><span class="lab">Export delle filiere del territorio, 2023</span><span class="big"><span data-draw="anni-tot" data-anno="2023">-</span> mln</span><span class="sm" data-draw="anni-var" data-anno="2023">-</span></div>
+        <div class="lx-kpi"><span class="lab">Export delle filiere del territorio, 2024</span><span class="big"><span data-draw="anni-tot" data-anno="2024">-</span> mln</span><span class="sm" data-draw="anni-var" data-anno="2024">-</span></div>
+        <div class="lx-kpi"><span class="lab">Export delle filiere del territorio, 2025</span><span class="big"><span data-draw="anni-tot" data-anno="2025">-</span> mln</span><span class="sm" data-draw="anni-var" data-anno="2025">-</span></div>
+      </div>
       <p class="lx-note">La vista d'insieme: l'export mancante di ogni filiera sommato su tutti i Paesi. Filiere da almeno 20 milioni l'anno, senza prodotti petroliferi raffinati, farmaci, auto finite, mezzi di trasporto, oro e gioielli. Quota PMI: parte dell'export del settore, in Italia, fatta dalle imprese sotto i 250 addetti. Con una quota del 49% il peso è 1; sopra pesa di più, sotto di meno.</p>
+      <div class="lx-controls lx-ordina" id="dr-fil-ordina"><span class="lx-note">Ordina per</span><button type="button" class="lx-ord" data-ord="anni" data-k="medio" aria-pressed="true">Export medio 2023-25, come oggi</button><button type="button" class="lx-ord" data-ord="anni" data-k="var" aria-pressed="false">Variazione 2023-2025</button></div>
       <div class="lx-wrap">
-        <table>
+        <table class="lx-bt lx-anni-tab">
           <thead><tr>
             <th>Filiera</th>
-            <th class="n">Export medio 2023-25 (mln)</th>
-            <th class="n">Var. 2023-25 (%)</th>
+            <th class="n">2023 (mln)</th>
+            <th class="n">2024 (mln)</th>
+            <th>2025 (mln)<span class="lx-scala">barra piena: <span data-draw="scala" data-scala="anni-2025"></span></span></th>
+            <th>Variazione 2023-2025 (mln)<span class="lx-scala">calo a sinistra, crescita a destra; barra piena: <span data-draw="scala" data-scala="anni-var"></span></span></th>
+            <th class="n">Var. del territorio 2023-25 (%)</th>
+            <th class="n">Var. resto d'Italia 2023-25 (%)</th>
+            <th class="n">Il territorio va (2023-25)</th>
+            <th>Export mancante, tutti i Paesi (mln/anno, media 2023-25)<span class="lx-scala">barra piena: <span data-draw="scala" data-scala="anni-spazio"></span></span></th>
             <th class="n">Peso sul territorio (%, media 2023-25)</th>
             <th class="n">Quota PMI settore (%, 2024)</th>
-            <th class="n">Export mancante, tutti i Paesi (mln/anno, media 2023-25)</th>
             <th class="n">di cui nei Paesi sopra soglia (mln/anno)</th>
             <th>Concentrata su</th>
             <th>Confronto</th>
           </tr></thead>
-          <tbody data-draw="tab-fil"></tbody>
+          <tbody data-draw="tab-anni"></tbody>
         </table>
       </div>
+      <p class="lx-note">Il territorio va: meglio o peggio con uno scarto di oltre 5 punti tra la variazione 2023-2025 del territorio e quella del resto d'Italia, altrimenti simile. Resto d'Italia: gli altri 11 territori; per tessile, abbigliamento e pelle e calzature i territori della moda (colonna Confronto). Nella frase e nei tre numeri in testa il resto d'Italia sono gli altri 11 territori nelle stesse filiere. Fonte: Istat Coeweb, export delle province, anni 2023, 2024 e 2025, estrazione del 18 novembre 2026; oro (Istat SITC voce 97) e gioielli tolti.</p>
     </section>
 
     <section class="lx-card" id="dr-simili">
@@ -441,19 +488,21 @@ body { padding: 24px 28px 48px; max-width: 1280px; margin: 0 auto; font-size: va
     <div id="paese-contesto" data-draw="contesto" data-source="contesto_paesi"></div>
     <section class="lx-card" id="paese-domanda">
       <h2>Quanto importa il Paese, filiera per filiera</h2>
-      <p class="lx-note">Barra grigia: import medio annuo 2023-2025 del Paese da tutto il mondo, in milioni di euro; parte colorata: quanto arriva dall'Italia. Accanto alla barra, nell'ordine: import medio 2023-25 (mln), variazione dell'import dal 2023 al 2025, quota dell'Italia (media 2023-25).</p>
-      <div class="lx-chart" data-draw="barre-paese" data-source="domanda_paesi"></div>
+      <div class="lx-anni-frase" data-draw="pae-frase"></div>
+      <p class="lx-note">Per ogni filiera: import medio annuo 2023-2025 del Paese da tutto il mondo e quanto arriva dall'Italia, in milioni di euro; variazione dell'import e quota dell'Italia, sopra, pari o sotto la media del Paese su tutte le filiere (<span data-draw="pae-media">-</span>). Spazio del territorio: export mancante di <span data-draw="pae-dr">-</span>, il territorio scelto nella scheda Territorio, media 2023-2025; il trattino vuol dire meno di 1 milione o coppia esclusa dal calcolo. Ogni colonna con barre ha la sua scala, scritta sotto il titolo.</p>
+      <div class="lx-controls lx-ordina" id="paese-ordina"><span class="lx-note">Ordina per</span><button type="button" class="lx-ord" data-ord="pae" data-k="import_mln" aria-pressed="true">Import, come oggi</button><button type="button" class="lx-ord" data-ord="pae" data-k="import_da_italia_mln" aria-pressed="false">Vendite italiane</button><button type="button" class="lx-ord" data-ord="pae" data-k="spazio" aria-pressed="false">Spazio del territorio</button></div>
       <div class="lx-wrap">
-        <table>
+        <table class="lx-bt lx-pae-tab">
           <thead><tr>
             <th>Filiera</th>
-            <th class="n">Import da tutto il mondo (mln/anno, media 2023-25)</th>
-            <th class="n">di cui dall'Italia (mln/anno, media 2023-25)</th>
+            <th>Import da tutto il mondo (mln/anno, media 2023-25)<span class="lx-scala">barra piena: <span data-draw="scala" data-scala="pae-imp"></span></span></th>
+            <th>di cui dall'Italia (mln/anno, media 2023-25)<span class="lx-scala">barra piena: <span data-draw="scala" data-scala="pae-ita"></span></span></th>
             <th class="n">Import, var. 2023-25 (%)</th>
             <th class="n">Quota Italia (%, media 2023-25)</th>
             <th class="n">Quota Italia, var. 2023-25 (punti)</th>
+            <th>Spazio del territorio scelto (mln/anno, media 2023-25)<span class="lx-scala">barra piena: <span data-draw="scala" data-scala="pae-sp"></span></span></th>
           </tr></thead>
-          <tbody data-draw="tab-dom"></tbody>
+          <tbody data-draw="tab-pae"></tbody>
         </table>
       </div>
       <p class="lx-note">Fonte della domanda: <span data-draw="dom-fonte" data-source="domanda_paesi" data-field="fonte">-</span>. Componenti auto: solo parti e accessori (8708, 8511, 8512, 9401.20, 8544.30), senza le auto finite.</p>
@@ -504,24 +553,26 @@ body { padding: 24px 28px 48px; max-width: 1280px; margin: 0 auto; font-size: va
     </div>
     <section class="lx-card" id="filiera-mercato">
       <h2>Il mercato della filiera: chi importa, se cresce, quanto pesa l'Italia</h2>
-      <p class="lx-take" data-draw="fil-mercato-sintesi" data-source="mercati_filiera filiere_dr">-</p>
-      <p class="lx-note">Si parte dal mercato e poi si scende ai territori. Per ogni Paese: quanto importa ogni anno da tutto il mondo nella filiera (media 2023-25) e come è cambiato l'import dal 2023 al 2025. Poi quanto pesa l'Italia e come è cambiata la sua quota. Infine l'export dei 12 territori verso il Paese, l'export mancante sommato sui 12 territori e i territori con almeno 5 milioni di spazio. Solo i 31 Paesi con dati ONU o Eurostat: non è il mercato mondiale. Mancano, tra gli altri, Emirati Arabi Uniti, Hong Kong, Turchia, Israele e Australia. Le filiere sono costruite dai codici doganali, come nella scheda Mercato e accesso: import e quota Italia coincidono. I codici di ogni filiera sono nella scheda Mercato e accesso, riquadro "Il perimetro della filiera".</p>
-      <div class="lx-controls"><label><input type="checkbox" id="chk-fil-tutti"> Mostra tutti i 31 Paesi (di base i primi 15 per import)</label></div>
+      <div class="lx-anni-frase" data-draw="fil-frase"></div>
+      <p class="lx-note">Si parte dal mercato e poi si scende ai territori. Per ogni Paese: quanto importa ogni anno da tutto il mondo nella filiera (media 2023-25) e come è cambiato l'import dal 2023 al 2025. Poi quanto vende l'Italia, quanto pesa e come è cambiata la sua quota. Infine l'export mancante sommato sui 12 territori e i territori con almeno 5 milioni di spazio. Solo i 31 Paesi con dati ONU o Eurostat: non è il mercato mondiale. Mancano, tra gli altri, Emirati Arabi Uniti, Hong Kong, Turchia, Israele e Australia. Le filiere sono costruite dai codici doganali, come nella scheda Mercato e accesso: import e quota Italia coincidono. I codici di ogni filiera sono nella scheda Mercato e accesso, riquadro "Il perimetro della filiera".</p>
+      <div class="lx-controls lx-ordina" id="filiera-ordina"><span class="lx-note">Ordina per</span><button type="button" class="lx-ord" data-ord="fil" data-k="import_mln" aria-pressed="true">Import, come oggi</button><button type="button" class="lx-ord" data-ord="fil" data-k="import_da_italia_mln" aria-pressed="false">Vendite italiane</button><button type="button" class="lx-ord" data-ord="fil" data-k="mancante_12dr_mln" aria-pressed="false">Spazio dei 12 territori</button><button type="button" class="lx-ord" data-ord="fil" data-k="quota_italia_pct" aria-pressed="false">Quota italiana</button></div>
+      <div class="lx-controls"><label><input type="checkbox" id="chk-fil-tutti"> Mostra tutti i 31 Paesi (di base i primi 15 nell'ordine scelto)</label></div>
       <div class="lx-wrap">
-        <table>
+        <table class="lx-bt">
           <thead><tr>
             <th>Paese</th>
-            <th class="n">Import da tutto il mondo (mln/anno, media 2023-25)</th>
-            <th class="n">Import, var. 2023-25 (%)</th>
+            <th>Import da tutto il mondo (mln/anno, media 2023-25)<span class="lx-scala">barra piena: <span data-draw="scala" data-scala="fil-imp"></span></span></th>
+            <th>Vendite italiane nel Paese (mln/anno, media 2023-25)<span class="lx-scala">barra piena: <span data-draw="scala" data-scala="fil-ita"></span></span></th>
             <th class="n">Quota Italia (%, media 2023-25)</th>
             <th class="n">Quota Italia, var. 2023-25 (punti)</th>
-            <th class="n">Export 12 territori (mln/anno, media 2023-25)</th>
-            <th class="n">Export mancante 12 territori (mln/anno, media 2023-25)</th>
+            <th class="n">Import, var. 2023-25 (%)</th>
+            <th>Export mancante 12 territori (mln/anno, media 2023-25)<span class="lx-scala">barra piena: <span data-draw="scala" data-scala="fil-sp"></span></span></th>
             <th>Territori con almeno 5 mln di spazio</th>
           </tr></thead>
-          <tbody data-draw="tab-fil-mercato"></tbody>
+          <tbody data-draw="tab-fil-bar"></tbody>
         </table>
       </div>
+      <p class="lx-note">Quota sopra, pari o sotto la media: confronto con la quota italiana nei Paesi con dati per la filiera (<span data-draw="fil-media">-</span>). Ogni colonna con barre ha la sua scala, scritta sotto il titolo.</p>
       <p class="lx-note">Fonte dell'import: ONU Comtrade per i 12 Paesi fuori UE (dollari convertiti in euro con il cambio medio BCE), Eurostat Comext per i 19 Paesi UE. Anni 2023-2025, al netto delle reimportazioni. Export dei territori: Istat Coeweb (media 2023-25, estrazione del 18 novembre 2026; oro tolto con Istat SITC voce 97, estrazione del 20 novembre 2026).</p>
     </section>
     <section class="lx-card" id="filiera-dr">
@@ -736,20 +787,23 @@ body { padding: 24px 28px 48px; max-width: 1280px; margin: 0 auto; font-size: va
 
     <section class="lx-card" id="ma-concorrenti">
       <h2>4. Chi vende nel Paese</h2>
+      <div class="lx-anni-frase" data-draw="conc-frase"></div>
       <h3>L'Italia famiglia per famiglia</h3>
       <div data-draw="ma-testo" data-slot="conc_ita_nota"></div>
       <div class="lx-wrap">
-        <table class="lx-ma-ita">
+        <table class="lx-ma-ita lx-bt">
           <thead><tr>
             <th>Famiglia o prodotto</th>
-            <th class="n">Import del Paese (mln euro, 2025)</th>
+            <th>Import del Paese (mln euro, 2025)<span class="lx-scala">barra piena: <span data-draw="scala" data-scala="conc-merc"></span></span></th>
+            <th>Venduto dall'Italia (mln euro, 2025)<span class="lx-scala">barra piena: <span data-draw="scala" data-scala="conc-ita"></span></span></th>
             <th class="n">Posizione dell'Italia (2025)</th>
             <th class="n">Quota Italia (%, 2025)</th>
             <th class="n">Var. quota 2023-25 (punti)</th>
           </tr></thead>
-          <tbody data-draw="ma-tab-ita"></tbody>
+          <tbody data-draw="tab-conc-ita"></tbody>
         </table>
       </div>
+      <p class="lx-note">La prima riga è il totale della filiera: senza barra, perché sta fuori dalla scala delle famiglie.</p>
       <h3>I concorrenti</h3>
       <div class="lx-controls">
         <label>Famiglia o prodotto
@@ -759,18 +813,19 @@ body { padding: 24px 28px 48px; max-width: 1280px; margin: 0 auto; font-size: va
       <p class="lx-take" data-draw="ma-conc-sintesi">-</p>
       <div data-draw="ma-testo" data-slot="conc_nota"></div>
       <div class="lx-wrap">
-        <table class="lx-ma-conc">
+        <table class="lx-ma-conc lx-bt">
           <thead><tr>
             <th class="n">Posizione (2025)</th>
             <th>Fornitore</th>
-            <th class="n">Venduto nel Paese (mln euro, 2025)</th>
+            <th>Venduto nel Paese (mln euro, 2025)<span class="lx-scala">barra piena: <span data-draw="scala" data-scala="conc-val"></span></span></th>
             <th class="n">Quota (%, 2025)</th>
             <th class="n">Quota (%, 2023)</th>
             <th class="n">Var. quota 2023-25 (punti)</th>
           </tr></thead>
-          <tbody data-draw="ma-tab-conc"></tbody>
+          <tbody data-draw="tab-conc-forn"></tbody>
         </table>
       </div>
+      <p class="lx-note">In marrone la riga dell'Italia. Se l'Italia non è tra i primi fornitori, compare comunque in fondo con la sua posizione.</p>
     </section>
 
     <details id="ma-metodo">
@@ -872,13 +927,14 @@ body { padding: 24px 28px 48px; max-width: 1280px; margin: 0 auto; font-size: va
     </ul>
   </details>
 </div>
-<script src="js/d3.v7.min.js?v=2"></script>
-<script src="js/lx-dash.js?v=2"></script>
-<script src="js/lx-base.js?v=2"></script>
-<script src="js/lx-dr.js?v=2"></script>
-<script src="js/lx-altro.js?v=2"></script>
-<script src="js/lx-ma.js?v=2"></script>
-<script src="js/lx-fonti.js?v=2"></script>
-<script src="js/lx-gruppi.js?v=2"></script>
+<script src="js/d3.v7.min.js?v=3"></script>
+<script src="js/lx-dash.js?v=3"></script>
+<script src="js/lx-base.js?v=3"></script>
+<script src="js/lx-dr.js?v=3"></script>
+<script src="js/lx-altro.js?v=3"></script>
+<script src="js/lx-ma.js?v=3"></script>
+<script src="js/lx-fonti.js?v=3"></script>
+<script src="js/lx-gruppi.js?v=3"></script>
+<script src="js/lx-grafici.js?v=3"></script>
 </body>
 </html>
