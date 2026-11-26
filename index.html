@@ -169,8 +169,8 @@ body { padding: 24px 28px 48px; max-width: 1280px; margin: 0 auto; font-size: va
 .lx .lx-q { display: inline-flex; flex-direction: column; align-items: flex-end; line-height: 1.2; }
 .lx .lx-q small { font-size: 11px; color: var(--color-fg-muted); font-weight: 400; }
 .lx tr.lx-ita td { color: #6b3f17; }
-.lx .lx-anni-tab { min-width: 1500px; }
-.lx .lx-anni-tab th:nth-child(1) { width: 9%; } .lx .lx-anni-tab th.n { width: 5%; } .lx .lx-anni-tab th:nth-child(4), .lx .lx-anni-tab th:nth-child(5), .lx .lx-anni-tab th:nth-child(9) { width: 11%; } .lx .lx-anni-tab th:nth-child(13), .lx .lx-anni-tab th:nth-child(14) { width: 9%; }
+.lx .lx-anni-tab { min-width: 1200px; }
+.lx .lx-anni-tab th:nth-child(1) { width: 9%; } .lx .lx-anni-tab th.n { width: 5%; } .lx .lx-anni-tab th:nth-child(4), .lx .lx-anni-tab th:nth-child(5), .lx .lx-anni-tab th:nth-child(9) { width: 11%; } .lx .lx-anni-tab th:nth-child(12) { width: 6.5%; } .lx .lx-anni-tab th:nth-child(13), .lx .lx-anni-tab th:nth-child(14) { width: 8.25%; }
 .lx #filiera-mercato table.lx-bt { min-width: 1100px; }
 .lx #filiera-mercato .lx-bt th:nth-child(2), .lx #filiera-mercato .lx-bt th:nth-child(3), .lx #filiera-mercato .lx-bt th:nth-child(7) { width: 15%; }
 .lx #filiera-mercato .lx-bt th.n { width: 8%; }
@@ -182,6 +182,11 @@ body { padding: 24px 28px 48px; max-width: 1280px; margin: 0 auto; font-size: va
 .lx #sez-ma .lx-ma-ita.lx-bt th:nth-child(1) { width: 28%; } .lx #sez-ma .lx-ma-ita.lx-bt th:nth-child(2), .lx #sez-ma .lx-ma-ita.lx-bt th:nth-child(3) { width: 22%; } .lx #sez-ma .lx-ma-ita.lx-bt th.n { width: 9.3%; }
 .lx #sez-ma .lx-ma-conc.lx-bt { min-width: 760px; }
 .lx #sez-ma .lx-ma-conc.lx-bt th:nth-child(2) { width: 22%; } .lx #sez-ma .lx-ma-conc.lx-bt th:nth-child(3) { width: 30%; } .lx #sez-ma .lx-ma-conc.lx-bt th.n { width: 12%; }
+/* filiere senza dati di mercato: solo la frase */
+.lx #filiera-mercato:has(tbody[data-draw="tab-fil-bar"] tr.row-muted) :is(#filiera-ordina, .lx-wrap, .lx-controls:has(#chk-fil-tutti), p.lx-note:has([data-draw="fil-media"])) { display: none; }
+/* elenco che si apre con un clic */
+.lx .lx-elenco summary { cursor: pointer; white-space: nowrap; }
+.lx .lx-elenco > div { margin-top: 4px; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
 </style>
 </head>
 <body>
@@ -440,7 +445,7 @@ body { padding: 24px 28px 48px; max-width: 1280px; margin: 0 auto; font-size: va
           <tbody data-draw="tab-anni"></tbody>
         </table>
       </div>
-      <p class="lx-note">Il territorio va: meglio o peggio con uno scarto di oltre 5 punti tra la variazione 2023-2025 del territorio e quella del resto d'Italia, altrimenti simile. Resto d'Italia: gli altri 11 territori; per tessile, abbigliamento e pelle e calzature i territori della moda (colonna Confronto). Nella frase e nei tre numeri in testa il resto d'Italia sono gli altri 11 territori nelle stesse filiere. Fonte: Istat Coeweb, export delle province, anni 2023, 2024 e 2025, estrazione del 18 novembre 2026; oro (Istat SITC voce 97) e gioielli tolti.</p>
+      <p class="lx-note">Il territorio va: meglio o peggio con uno scarto di oltre 5 punti tra la variazione 2023-2025 del territorio e quella del resto d'Italia, altrimenti simile. Resto d'Italia: gli altri 11 territori; per tessile, abbigliamento e pelle e calzature i territori della moda di PMI (colonna Confronto): Veneto Ovest e Trentino Alto Adige; Veneto Est e Friuli Venezia Giulia; Emilia Romagna e Marche; Basilicata, Puglia e Molise. Nella frase e nei tre numeri in testa il resto d'Italia sono gli altri 11 territori nelle stesse filiere. Fonte: Istat Coeweb, export delle province, anni 2023, 2024 e 2025, estrazione del 18 novembre 2026; oro (Istat SITC voce 97) e gioielli tolti.</p>
     </section>
 
     <section class="lx-card" id="dr-simili">
@@ -567,7 +572,7 @@ body { padding: 24px 28px 48px; max-width: 1280px; margin: 0 auto; font-size: va
             <th class="n">Quota Italia, var. 2023-25 (punti)</th>
             <th class="n">Import, var. 2023-25 (%)</th>
             <th>Export mancante 12 territori (mln/anno, media 2023-25)<span class="lx-scala">barra piena: <span data-draw="scala" data-scala="fil-sp"></span></span></th>
-            <th>Territori con almeno 5 mln di spazio</th>
+            <th>Territori con almeno 5 mln di spazio<span class="lx-scala">clic sul numero per l'elenco</span></th>
           </tr></thead>
           <tbody data-draw="tab-fil-bar"></tbody>
         </table>
@@ -927,14 +932,14 @@ body { padding: 24px 28px 48px; max-width: 1280px; margin: 0 auto; font-size: va
     </ul>
   </details>
 </div>
-<script src="js/d3.v7.min.js?v=3"></script>
-<script src="js/lx-dash.js?v=3"></script>
-<script src="js/lx-base.js?v=3"></script>
-<script src="js/lx-dr.js?v=3"></script>
-<script src="js/lx-altro.js?v=3"></script>
-<script src="js/lx-ma.js?v=3"></script>
-<script src="js/lx-fonti.js?v=3"></script>
-<script src="js/lx-gruppi.js?v=3"></script>
-<script src="js/lx-grafici.js?v=3"></script>
+<script src="js/d3.v7.min.js?v=4"></script>
+<script src="js/lx-dash.js?v=4"></script>
+<script src="js/lx-base.js?v=4"></script>
+<script src="js/lx-dr.js?v=4"></script>
+<script src="js/lx-altro.js?v=4"></script>
+<script src="js/lx-ma.js?v=4"></script>
+<script src="js/lx-fonti.js?v=4"></script>
+<script src="js/lx-gruppi.js?v=4"></script>
+<script src="js/lx-grafici.js?v=4"></script>
 </body>
 </html>

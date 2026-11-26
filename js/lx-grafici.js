@@ -134,7 +134,7 @@
       { n: 1, text: (y) => LX.fmt(y.r.quota_pmi_settore_pct, 'int') },
       { n: 1, text: (y) => LX.fmt(y.r.mancante_paesi_sopra_soglia_mln, 'int') },
       { text: (y) => y.r.concentrata_su || '' },
-      { text: (y) => y.r.confronto || '' },
+      { cell: (td, y) => { const c = y.r.confronto || ''; const i = c.indexOf(' ('); td.textContent = i > 0 ? c.slice(0, i) : c; if (i > 0) td.title = c; } },
     ], null, 'Nessuna filiera per questa scelta.');
   });
   const anniTot = () => {
@@ -195,7 +195,14 @@
       { n: 1, text: (r) => LX.fmt(r.var_quota_italia_punti, 'pt'), cls: (r) => LX.sc(r.var_quota_italia_punti) },
       { n: 1, text: (r) => LX.fmt(r.crescita_import_pct, 'pctd'), cls: (r) => LX.sc(r.crescita_import_pct) },
       { cell: (td, r) => LX.gBar(td, (N(r.mancante_12dr_mln) || 0) / scale['fil-sp'].v * 100, COL.scuro, f.int(N(r.mancante_12dr_mln) || 0)) },
-      { text: (r) => (N(r.dr_con_spazio) ? String(r.dr_elenco).split('-').map((x) => LX.gDR(x)).join('; ') : '') },
+      { cell: (td, r) => {
+        if (!N(r.dr_con_spazio)) return;
+        const xs = String(r.dr_elenco).split('-').filter((x) => x).map((x) => LX.gDR(x));
+        const d = document.createElement('details'); d.className = 'lx-elenco';
+        const s = document.createElement('summary'); s.textContent = xs.length === 1 ? '1 territorio' : xs.length + ' territori';
+        const u = document.createElement('div'); u.textContent = xs.join('; ');
+        d.append(s, u); td.append(d);
+      } },
     ], null, 'Per questa filiera non ci sono dati sulla domanda dei Paesi.');
   });
   dash.draw('fil-media', (el) => { const rows = LX.gFil(); const v = rows && rows.length ? filMedia(rows) : null; el.textContent = v === null ? '-' : f.dec(v) + '%'; });
