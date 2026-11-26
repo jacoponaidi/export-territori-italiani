@@ -1,6 +1,6 @@
 # Export dei territori italiani: filiere, mercati e accesso
 
-Pagina web statica a cura di Jacopo Naidi. Dati da fonti pubbliche, aggiornati al 25 novembre 2026.
+Pagina web statica a cura di Jacopo Naidi. Dati da fonti pubbliche, aggiornati al 26 novembre 2026.
 
 Per ogni territorio (12 gruppi di province) la pagina mostra cosa esportano le imprese, dove vendono meno del resto d'Italia nelle stesse filiere (export mancante) e, per ogni coppia filiera-Paese, dazi, tasse, trasporto, regole e concorrenti.
 

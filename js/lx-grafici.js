@@ -1,8 +1,11 @@
 // Barre in milioni con la scala dichiarata, frasi scritte dai dati, ordinamenti.
 // Territorio, "Le filiere del territorio"; Filiere, "Il mercato della filiera";
 // Paesi e domanda, "Quanto importa il Paese"; Mercato e accesso, "4. Chi vende nel Paese".
+// Versione 4 (26/11/2026): «all'8° posto» e «all'11° posto» nella frase dei concorrenti; «-» invece di «NaN» nei numeri.
 (function () {
   const N = LX.N, f = LX.f;
+  // protezione (26/11/2026): un valore che non è un numero si scrive «-», non «NaN»; vale per tutte le schede, che usano lo stesso LX.f
+  Object.keys(LX.f).forEach((k) => { const o = LX.f[k]; if (o.lxProt) return; LX.f[k] = (v) => (v !== null && v !== '' && !isFinite(+v) ? '-' : o(v)); LX.f[k].lxProt = true; });
   const ORD = { anni: 'medio', fil: 'import_mln', pae: 'import_mln' };
   LX.gOrd = ORD;
   const COL = { grigio: 'var(--cds-chart-muted)', marrone: '#8c5a2b', scuro: 'var(--color-fg-muted)' };
@@ -335,7 +338,7 @@
     else {
       const q = f.dec(N(tf.quota_2025_pct)) + '%';
       const dq = N(tf.quota_2023_pct) === null ? null : N(tf.quota_2025_pct) - N(tf.quota_2023_pct);
-      r1 = prep + " l'Italia è al " + tf.posizione_testo + '° posto tra i fornitori di ' + fil + ': nel 2025 vende ' + f.int(v0) + ' milioni di euro, ' + LX.il(q) + ' di quanto il Paese importa' +
+      r1 = prep + " l'Italia è " + (String(tf.posizione_testo) !== '1' && LX.voc(tf.posizione_testo) === 'v' ? "all'" : 'al ') + tf.posizione_testo + '° posto tra i fornitori di ' + fil + ': nel 2025 vende ' + f.int(v0) + ' milioni di euro, ' + LX.il(q) + ' di quanto il Paese importa' +
         (dq === null ? '.' : Math.abs(dq) < 0.05 ? ' (quota stabile rispetto al 2023).' : ' (' + f.pt(dq) + ' punti dal 2023).');
     }
     const fam = it.filter((r) => r.ordine_famiglia !== 0);
