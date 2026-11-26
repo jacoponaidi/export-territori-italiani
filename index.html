@@ -688,8 +688,51 @@ body { padding: 24px 28px 48px; max-width: 1280px; margin: 0 auto; font-size: va
       <div data-draw="ma-testo" data-slot="mercato_nota"></div>
     </section>
 
+    <section class="lx-card" id="ma-concorrenti">
+      <h2>1. Chi vende nel Paese</h2>
+      <div class="lx-anni-frase" data-draw="conc-frase"></div>
+      <h3>L'Italia famiglia per famiglia</h3>
+      <div data-draw="ma-testo" data-slot="conc_ita_nota"></div>
+      <div class="lx-wrap">
+        <table class="lx-ma-ita lx-bt">
+          <thead><tr>
+            <th>Famiglia o prodotto</th>
+            <th>Import del Paese (mln euro, 2025)<span class="lx-scala">barra piena: <span data-draw="scala" data-scala="conc-merc"></span></span></th>
+            <th>Venduto dall'Italia (mln euro, 2025)<span class="lx-scala">barra piena: <span data-draw="scala" data-scala="conc-ita"></span></span></th>
+            <th class="n">Posizione dell'Italia (2025)</th>
+            <th class="n">Quota Italia (%, 2025)</th>
+            <th class="n">Var. quota 2023-25 (punti)</th>
+          </tr></thead>
+          <tbody data-draw="tab-conc-ita"></tbody>
+        </table>
+      </div>
+      <p class="lx-note">La prima riga è il totale della filiera: senza barra, perché sta fuori dalla scala delle famiglie.</p>
+      <h3>I concorrenti</h3>
+      <div class="lx-controls">
+        <label>Famiglia o prodotto
+          <select class="dash-select" data-draw="ma-sel-fam" aria-label="Famiglia di prodotti per i concorrenti"></select>
+        </label>
+      </div>
+      <p class="lx-take" data-draw="ma-conc-sintesi">-</p>
+      <div data-draw="ma-testo" data-slot="conc_nota"></div>
+      <div class="lx-wrap">
+        <table class="lx-ma-conc lx-bt">
+          <thead><tr>
+            <th class="n">Posizione (2025)</th>
+            <th>Fornitore</th>
+            <th>Venduto nel Paese (mln euro, 2025)<span class="lx-scala">barra piena: <span data-draw="scala" data-scala="conc-val"></span></span></th>
+            <th class="n">Quota (%, 2025)</th>
+            <th class="n">Quota (%, 2023)</th>
+            <th class="n">Var. quota 2023-25 (punti)</th>
+          </tr></thead>
+          <tbody data-draw="tab-conc-forn"></tbody>
+        </table>
+      </div>
+      <p class="lx-note">In marrone la riga dell'Italia. Se l'Italia non è tra i primi fornitori, compare comunque in fondo con la sua posizione.</p>
+    </section>
+
     <section class="lx-card" id="ma-accesso">
-      <h2>1. Quanto costa entrare: dazi e tasse all'import</h2>
+      <h2>2. Quanto costa entrare: dazi e tasse all'import</h2>
       <div data-draw="ma-testo" data-slot="accesso_nota" data-default="Paesi UE: mercato unico, nessun dazio e nessuna dogana. Per i Paesi fuori dall'UE: dazio per la merce di origine Italia (UE) e dazio normale per chi non ha accordi. Dove la riga è una famiglia di prodotti, il dazio è la media semplice delle voci doganali nazionali, con il valore minimo e massimo."></div>
       <div class="lx-wrap">
         <table class="lx-ma-acc">
@@ -735,7 +778,7 @@ body { padding: 24px 28px 48px; max-width: 1280px; margin: 0 auto; font-size: va
     </section>
 
     <section class="lx-card" id="ma-trasporto">
-      <h2>2. Quanto pesa il trasporto</h2>
+      <h2>3. Quanto pesa il trasporto</h2>
       <div data-draw="ma-testo" data-slot="trasporto_nota"></div>
       <h3>Quanto costa spedire: un container o un camion</h3>
       <div data-draw="ma-testo" data-slot="spedizione_nota" data-default="Nolo medio 2025 dall'Italia verso l'area del Paese, servizi accessori esclusi. Fonte: Banca d'Italia, Indagine sui trasporti internazionali di merci - 2025 (19 giugno 2026), Tavole 1 e 4; dollari convertiti con il cambio medio BCE 2025 (1,13). Medie su tutte le merci e su aree ampie: un ordine di grandezza, non un preventivo. Scrivendo il valore di un ordine si vede quanto peserebbe il nolo."></div>
@@ -775,7 +818,7 @@ body { padding: 24px 28px 48px; max-width: 1280px; margin: 0 auto; font-size: va
     </section>
 
     <section class="lx-card" id="ma-requisiti">
-      <h2>3. Cosa serve per vendere</h2>
+      <h2>4. Cosa serve per vendere</h2>
       <div data-draw="ma-testo" data-slot="requisiti_nota"></div>
       <div class="lx-wrap">
         <table class="lx-ma-req">
@@ -788,49 +831,6 @@ body { padding: 24px 28px 48px; max-width: 1280px; margin: 0 auto; font-size: va
           <tbody data-draw="ma-tab-req"></tbody>
         </table>
       </div>
-    </section>
-
-    <section class="lx-card" id="ma-concorrenti">
-      <h2>4. Chi vende nel Paese</h2>
-      <div class="lx-anni-frase" data-draw="conc-frase"></div>
-      <h3>L'Italia famiglia per famiglia</h3>
-      <div data-draw="ma-testo" data-slot="conc_ita_nota"></div>
-      <div class="lx-wrap">
-        <table class="lx-ma-ita lx-bt">
-          <thead><tr>
-            <th>Famiglia o prodotto</th>
-            <th>Import del Paese (mln euro, 2025)<span class="lx-scala">barra piena: <span data-draw="scala" data-scala="conc-merc"></span></span></th>
-            <th>Venduto dall'Italia (mln euro, 2025)<span class="lx-scala">barra piena: <span data-draw="scala" data-scala="conc-ita"></span></span></th>
-            <th class="n">Posizione dell'Italia (2025)</th>
-            <th class="n">Quota Italia (%, 2025)</th>
-            <th class="n">Var. quota 2023-25 (punti)</th>
-          </tr></thead>
-          <tbody data-draw="tab-conc-ita"></tbody>
-        </table>
-      </div>
-      <p class="lx-note">La prima riga è il totale della filiera: senza barra, perché sta fuori dalla scala delle famiglie.</p>
-      <h3>I concorrenti</h3>
-      <div class="lx-controls">
-        <label>Famiglia o prodotto
-          <select class="dash-select" data-draw="ma-sel-fam" aria-label="Famiglia di prodotti per i concorrenti"></select>
-        </label>
-      </div>
-      <p class="lx-take" data-draw="ma-conc-sintesi">-</p>
-      <div data-draw="ma-testo" data-slot="conc_nota"></div>
-      <div class="lx-wrap">
-        <table class="lx-ma-conc lx-bt">
-          <thead><tr>
-            <th class="n">Posizione (2025)</th>
-            <th>Fornitore</th>
-            <th>Venduto nel Paese (mln euro, 2025)<span class="lx-scala">barra piena: <span data-draw="scala" data-scala="conc-val"></span></span></th>
-            <th class="n">Quota (%, 2025)</th>
-            <th class="n">Quota (%, 2023)</th>
-            <th class="n">Var. quota 2023-25 (punti)</th>
-          </tr></thead>
-          <tbody data-draw="tab-conc-forn"></tbody>
-        </table>
-      </div>
-      <p class="lx-note">In marrone la riga dell'Italia. Se l'Italia non è tra i primi fornitori, compare comunque in fondo con la sua posizione.</p>
     </section>
 
     <details id="ma-metodo">
@@ -932,14 +932,14 @@ body { padding: 24px 28px 48px; max-width: 1280px; margin: 0 auto; font-size: va
     </ul>
   </details>
 </div>
-<script src="js/d3.v7.min.js?v=5"></script>
-<script src="js/lx-dash.js?v=5"></script>
-<script src="js/lx-base.js?v=5"></script>
-<script src="js/lx-dr.js?v=5"></script>
-<script src="js/lx-altro.js?v=5"></script>
-<script src="js/lx-ma.js?v=5"></script>
-<script src="js/lx-fonti.js?v=5"></script>
-<script src="js/lx-gruppi.js?v=5"></script>
-<script src="js/lx-grafici.js?v=5"></script>
+<script src="js/d3.v7.min.js?v=6"></script>
+<script src="js/lx-dash.js?v=6"></script>
+<script src="js/lx-base.js?v=6"></script>
+<script src="js/lx-dr.js?v=6"></script>
+<script src="js/lx-altro.js?v=6"></script>
+<script src="js/lx-ma.js?v=6"></script>
+<script src="js/lx-fonti.js?v=6"></script>
+<script src="js/lx-gruppi.js?v=6"></script>
+<script src="js/lx-grafici.js?v=6"></script>
 </body>
 </html>
