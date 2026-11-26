@@ -1,12 +1,13 @@
 // Barre in milioni con la scala dichiarata, frasi scritte dai dati, ordinamenti.
 // Territorio, "Le filiere del territorio"; Filiere, "Il mercato della filiera";
-// Paesi e domanda, "Quanto importa il Paese"; Mercato e accesso, "4. Chi vende nel Paese".
+// Paesi e domanda, "Quanto importa il Paese"; Mercato e accesso, "1. Chi vende nel Paese".
 // Versione 4 (26/11/2026): «all'8° posto» e «all'11° posto» nella frase dei concorrenti; «-» invece di «NaN» nei numeri.
+// Versione 5 (26/11/2026): pulsanti «Ordina per» sulla tabella «L'Italia famiglia per famiglia» (il totale resta in cima); nel commento il riquadro è «1. Chi vende nel Paese» (spostato in cima alla scheda).
 (function () {
   const N = LX.N, f = LX.f;
   // protezione (26/11/2026): un valore che non è un numero si scrive «-», non «NaN»; vale per tutte le schede, che usano lo stesso LX.f
   Object.keys(LX.f).forEach((k) => { const o = LX.f[k]; if (o.lxProt) return; LX.f[k] = (v) => (v !== null && v !== '' && !isFinite(+v) ? '-' : o(v)); LX.f[k].lxProt = true; });
-  const ORD = { anni: 'medio', fil: 'import_mln', pae: 'import_mln' };
+  const ORD = { anni: 'medio', fil: 'import_mln', pae: 'import_mln', conc: 'ordine' };
   LX.gOrd = ORD;
   const COL = { grigio: 'var(--cds-chart-muted)', marrone: '#8c5a2b', scuro: 'var(--color-fg-muted)' };
   // nome del territorio
@@ -294,6 +295,15 @@
     scale['conc-merc'] = maxDi(fam, 'mercato_2025_mln_eur', (r) => famNome(r.famiglia));
     scale['conc-ita'] = maxDi(fam, 'valore_2025_mln_eur', (r) => famNome(r.famiglia));
   };
+  // ordine della tabella «L'Italia famiglia per famiglia»: il totale della filiera sempre in cima, poi le famiglie
+  const concOrd = (it) => {
+    const k = ORD.conc, tot = it.filter((r) => r.ordine_famiglia === 0), fam = it.filter((r) => r.ordine_famiglia !== 0);
+    if (k !== 'ordine') {
+      const v = (r) => { const x = N(r[k]); return x === null || x === undefined || isNaN(x) ? -Infinity : x; };
+      fam.sort((a, b) => (v(b) === v(a) ? a.ordine_famiglia - b.ordine_famiglia : (v(b) > v(a) ? 1 : -1)));
+    }
+    return tot.concat(fam);
+  };
   dash.draw('tab-conc-ita', (tb) => {
     const it = concIta();
     if (!it) { tb.replaceChildren(); return; }
@@ -302,7 +312,7 @@
       if (r.ordine_famiglia === 0) { td.className = 'n'; td.textContent = f.m(N(r[k]) || 0); }
       else LX.gBar(td, (N(r[k]) || 0) / scale[sc].v * 100, col, f.m(N(r[k]) || 0));
     };
-    LX.gTab(tb, it, [
+    LX.gTab(tb, concOrd(it), [
       { text: (r) => r.famiglia },
       { cell: (td, r) => bar(td, r, 'mercato_2025_mln_eur', 'conc-merc', COL.grigio) },
       { cell: (td, r) => bar(td, r, 'valore_2025_mln_eur', 'conc-ita', COL.marrone) },
@@ -380,6 +390,6 @@
     const g = b.dataset.ord;
     ORD[g] = b.dataset.k;
     document.querySelectorAll('button.lx-ord[data-ord="' + g + '"]').forEach((x) => x.setAttribute('aria-pressed', x === b ? 'true' : 'false'));
-    dash.draw({ anni: 'tab-anni', fil: 'tab-fil-bar', pae: 'tab-pae' }[g]);
+    dash.draw({ anni: 'tab-anni', fil: 'tab-fil-bar', pae: 'tab-pae', conc: 'tab-conc-ita' }[g]);
   }));
 })();
