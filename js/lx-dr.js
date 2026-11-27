@@ -147,11 +147,13 @@ LX.letturaDR = function (r) {
   return base + ": il territorio è in linea con il resto d'Italia.";
 };
 
+// tendenza del mercato sulla crescita non arrotondata (campo mercato_tendenza, 27/11/2026); senza il campo, dalla crescita scritta
+LX.tend = (r) => r.mercato_tendenza || (LX.N(r.crescita_import_pct) === null ? '' : LX.N(r.crescita_import_pct) > 2 ? 'crescita' : LX.N(r.crescita_import_pct) < -2 ? 'calo' : 'stabile');
 dash.draw('matrice', (el) => {
   const s = dash.data('opportunita');
   if (s.status !== 'ok') { LX.empty(el, s); return; }
   const N = LX.N, f = LX.f;
-  const rows = (LX.oppDR() || []).filter((r) => N(r.export_mancante_mln) > 0 && (!LX.mxCresc || N(r.crescita_import_pct) > 2));
+  const rows = (LX.oppDR() || []).filter((r) => N(r.export_mancante_mln) > 0 && (!LX.mxCresc || LX.tend(r) === 'crescita'));
   el.replaceChildren();
   if (!rows.length) { el.textContent = LX.mxCresc ? 'Nessuna filiera con export mancante in un mercato in crescita.' : 'Nessun export mancante per questo territorio.'; return; }
   const byP = d3.rollups(rows, (v) => ({ tot: d3.sum(v, (r) => N(r.export_mancante_mln)), sopra: v[0].paese_sopra_soglia === 'sì' }), (r) => r.paese);
@@ -179,9 +181,9 @@ dash.draw('matrice', (el) => {
       const q = r ? N(r.var_quota_italia_punti) : null;
       if (v >= 1 && r.lettura_dr === 'peggio') td.classed('peggio', true);
       else if (v >= 1 && q !== null && q < -0.2) td.classed('perde', true);
-      const g = r ? N(r.crescita_import_pct) : null;
-      if (v >= 1 && g !== null) {
-        td.append('span').attr('class', 'fr ' + (g > 2 ? 'su' : g < -2 ? 'giu' : 'piatto')).text(g > 2 ? '▲' : g < -2 ? '▼' : '●');
+      const g = r ? LX.tend(r) : '';
+      if (v >= 1 && g) {
+        td.append('span').attr('class', 'fr ' + (g === 'crescita' ? 'su' : g === 'calo' ? 'giu' : 'piatto')).text(g === 'crescita' ? '▲' : g === 'calo' ? '▼' : '●');
       }
       if (r) td.on('pointerenter pointermove', (ev) => tip.show(ev, `${fl}, ${p}: export mancante ${f.m(v)} mln l'anno (media 2023-25). Il territorio manda lì ${LX.il(f.dec(N(r.quota_dr_pct)) + '%')} del suo export della filiera, il resto d'Italia ${LX.il(f.dec(N(r.quota_resto_italia_pct)) + '%')} (media 2023-25).` + (N(r.crescita_import_pct) !== null ? ` Import del Paese ${f.int(N(r.import_paese_mln))} mln l'anno (media 2023-25), ${f.pctd(N(r.crescita_import_pct))} dal 2023 al 2025. Quota dell'Italia ${f.dec(N(r.quota_italia_pct))}% (media 2023-25), ${f.pt(N(r.var_quota_italia_punti))} punti dal 2023 al 2025.` : ' Domanda del Paese non disponibile.') + LX.letturaDR(r))).on('pointerleave', () => tip.hide());
     });

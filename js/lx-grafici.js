@@ -135,7 +135,7 @@
       { n: 1, text: (y) => y.g, cls: (y) => (y.g === 'meglio' ? 'good' : y.g === 'peggio' ? 'bad' : '') },
       { cell: (td, y) => LX.gBar(td, (N(y.r.mancante_tutti_paesi_mln) || 0) / ss * 100, COL.scuro, f.int(N(y.r.mancante_tutti_paesi_mln) || 0)) },
       { n: 1, text: (y) => LX.fmt(y.r.peso_su_perimetro_pct, 'dec') },
-      { n: 1, text: (y) => LX.fmt(y.r.quota_pmi_settore_pct, 'int') },
+      { n: 1, text: (y) => LX.fmt(y.r.quota_pmi_settore_pct, 'int') || '-' },
       { n: 1, text: (y) => LX.fmt(y.r.mancante_paesi_sopra_soglia_mln, 'int') },
       { text: (y) => y.r.concentrata_su || '' },
       { cell: (td, y) => { const c = y.r.confronto || ''; const i = c.indexOf(' ('); td.textContent = i > 0 ? c.slice(0, i) : c; if (i > 0) td.title = c; } },

@@ -77,7 +77,7 @@ dash.draw('grp-altri', (el) => {
   if (!d || !c || !n || c.motivo === 'filiera concentrata') { el.textContent = ''; return; }
   const k = d.filter((r) => r.coppia === LX.grpCoppia).length;
   const altri = n - k;
-  el.textContent = altri > 0 ? `Altri gruppi della filiera: ${altri}, sotto la soglia di lettura o senza spazio.` : '';
+  el.textContent = altri > 0 ? `Altri gruppi della filiera: ${altri}, sotto la soglia di lettura, senza spazio o con oltre metà dell'export del territorio in un solo Paese.` : '';
 });
 
 dash.draw('tab-nascosto', (tb) => {
